@@ -93,19 +93,19 @@ public class HomeFragment extends Fragment {
         // To set the row Date (optional)
         myRow.setDate(new Date());
         // To set the row Title (optional)
-        myRow.setTitle("Title " + id);
+        myRow.setTitle("Work");
         // To set the row Description (optional)
-        myRow.setDescription("Description " + id);
+        myRow.setDescription("starbucks");
         // To set the row bitmap image (optional)
-        myRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.img_0 + 1));
+        myRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.work));
         // To set row Below Line Color (optional)
         myRow.setBellowLineColor(Color.argb(255, 0, 0, 0));
         // To set row Below Line Size in dp (optional)
         myRow.setBellowLineSize(6);
         // To set row Image Size in dp (optional)
-        myRow.setImageSize(55);
+        myRow.setImageSize(30);
         // To set background color of the row image (optional)
-        myRow.setBackgroundColor(Color.argb(255, 0, 0, 0));
+        myRow.setBackgroundColor(Color.argb(255, 170, 170, 170));
         // To set the Background Size of the row image in dp (optional)
         myRow.setBackgroundSize(60);
         // To set row Date text color (optional)
