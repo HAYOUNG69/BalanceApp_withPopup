@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import org.qap.ctimelineview.TimelineRow;
@@ -19,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
+
+    Button button;
+    FragmentManager fm;
+    FragmentTransaction tran;
+    ProgressbarFragment frag1;
 
     //Create Timeline Rows List
     private ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
@@ -30,6 +38,16 @@ public class HomeFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_home,container,false);
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
+
+        button = (Button)view.findViewById(R.id.button);
+        frag1 = new ProgressbarFragment();
+        //setFrag(0);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrag(0);
+            }
+        });
 
         // Add to the List
         for (int i = 0; i < 5; i++) {
@@ -47,6 +65,25 @@ public class HomeFragment extends Fragment {
         myListView.setAdapter(myAdapter);
 
         return view;
+    }
+
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.button:
+                setFrag(0);
+                break;
+        }
+    }
+    public void setFrag(int n){
+        fm = getFragmentManager();
+        tran = fm.beginTransaction();
+        switch (n){
+            case 0:
+                tran.replace(R.id.fragment_container, frag1);
+                tran.commit();
+                break;
+                        //main_frame자리에 현재 frame이름
+        }
     }
 
     private TimelineRow createTimelineRow(int id) {
