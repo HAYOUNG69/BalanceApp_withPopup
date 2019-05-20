@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.qap.ctimelineview.TimelineRow;
-import org.qap.ctimelineview.TimelineViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
