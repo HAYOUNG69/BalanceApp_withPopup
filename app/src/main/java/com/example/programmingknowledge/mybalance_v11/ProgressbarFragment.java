@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,12 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 public class ProgressbarFragment extends Fragment {
 
+    FragmentManager fm;
+    FragmentTransaction tran;
+    HomeFragment frag2;
+
     Button bt1;
+    Button button2;
     View view;
     @Nullable
     @Override
@@ -21,6 +28,14 @@ public class ProgressbarFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_progressbar, container, false);
 
         bt1 = (Button)view.findViewById(R.id.button);
+        button2 = (Button)view.findViewById(R.id.button2);
+        frag2 = new HomeFragment();
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrag(1);
+            }
+        });
 
         final RoundCornerProgressBar progress1 = (RoundCornerProgressBar)view.findViewById(R.id.progressBar1);
         progress1.setProgressColor(Color.parseColor("#ff363636"));
@@ -84,6 +99,25 @@ public class ProgressbarFragment extends Fragment {
 
 
         return view;
+    }
+
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.button2:
+                setFrag(1);
+                break;
+        }
+    }
+    public void setFrag(int n){
+        fm = getFragmentManager();
+        tran = fm.beginTransaction();
+        switch (n){
+            case 1:
+                tran.replace(R.id.fragment_container, frag2);
+                tran.commit();
+                break;
+            //main_frame자리에 현재 frame이름
+        }
     }
 
 
