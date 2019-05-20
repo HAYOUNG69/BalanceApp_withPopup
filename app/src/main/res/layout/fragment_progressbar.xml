@@ -6,9 +6,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="right|top"
+        android:text="Button" />
+
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="62dp"
+        android:layout_gravity="center"
         android:layout_margin="8dp"
         android:gravity="center"
         android:text="오늘의 밸런스"
@@ -177,16 +186,14 @@
             tools:layout_editor_absoluteY="379dp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:gravity="right"
             android:text="Balance" />
 
 
@@ -198,7 +205,5 @@
             android:gravity="center"
             android:text="일이 많은 하루입니다!" />
 
-
-    </LinearLayout>
 
 </LinearLayout>
