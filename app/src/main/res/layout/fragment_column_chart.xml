@@ -6,7 +6,8 @@
     <lecho.lib.hellocharts.view.ColumnChartView
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </lecho.lib.hellocharts.view.ColumnChartView>
+        android:layout_height="360dp"
+        android:layout_margin="20dp"
+        ></lecho.lib.hellocharts.view.ColumnChartView>
 
 </RelativeLayout>
