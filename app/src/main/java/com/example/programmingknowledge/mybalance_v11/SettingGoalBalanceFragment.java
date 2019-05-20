@@ -43,7 +43,7 @@ import android.view.ViewGroup;
 
 
 
-public class SettingGoalBalanceFragment extends Fragment {
+public class SettingGoalBalanceFragment extends Fragment implements View.OnClickListener {
     TextView sleepCountTv, workCountTv, studyCountTv, exerciseCountTv, leisureCountTv, othersCountTv;
     double sleepCount, workCount, studyCount, exerciseCount, leisureCount, others;
     Button sleepMinus, workMinus, studyMinus, exerciseMinus, leisureMinus;
@@ -60,27 +60,20 @@ public class SettingGoalBalanceFragment extends Fragment {
 
         final DBHelper helper = new DBHelper(container.getContext());
 
+        View root = inflater.inflate(R.layout.fragment_setting_goal_balance, container, false);
 
-        //버튼 누르고있으면 반복 실행되게 하는 repeat메소드
-        repeat(sleepMinus);
-        repeat(sleepPlus);
-        repeat(workMinus);
-        repeat(workPlus);
-        repeat(studyMinus);
-        repeat(studyPlus);
-        repeat(exerciseMinus);
-        repeat(exercisePlus);
-        repeat(leisureMinus);
-        repeat(leisurePlus);
+        InitializeView(root);
 
-        //plus or minus
-        View root = inflater.inflate(R.layout.fragment_goal_balance_list, container, false);
-        Button btn = (Button) root.findViewById(R.id.cardView01);
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                MyOnClick(v);
-            }
-        });
+        sleepMinus.setOnClickListener(this);
+        sleepPlus.setOnClickListener(this);
+        workMinus.setOnClickListener(this);
+        workPlus.setOnClickListener(this);
+        studyMinus.setOnClickListener(this);
+        studyPlus.setOnClickListener(this);
+        exerciseMinus.setOnClickListener(this);
+        exercisePlus.setOnClickListener(this);
+        leisureMinus.setOnClickListener(this);
+        leisurePlus.setOnClickListener(this);
 
         //밸런스 확인
         TextView tv = (TextView) root.findViewById(R.id.view);
@@ -90,12 +83,28 @@ public class SettingGoalBalanceFragment extends Fragment {
             }
         });
 
-        InitializeView(root);
-        
+
         // Inflate the layout for this fragment
         return root;
     }
 
+    //plus or minus
+    @Override
+    public void onClick(View v){
+        MyOnClick(v);
+
+        //버튼 누르고있으면 반복 실행되게 하는 repeat메소드
+        this.repeat(sleepMinus);
+        this.repeat(sleepPlus);
+        this.repeat(workMinus);
+        this.repeat(workPlus);
+        this.repeat(studyMinus);
+        this.repeat(studyPlus);
+        this.repeat(exerciseMinus);
+        this.repeat(exercisePlus);
+        this.repeat(leisureMinus);
+        this.repeat(leisurePlus);
+    }
 
 
     public void InitializeView(View root)

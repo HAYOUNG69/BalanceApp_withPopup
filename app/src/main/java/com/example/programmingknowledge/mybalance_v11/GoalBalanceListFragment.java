@@ -49,8 +49,9 @@ public class GoalBalanceListFragment extends Fragment {
         Cursor cursor = db.rawQuery("select sleep, work, study, exercise, leisure, other, week from tb_goalbalance", null);
 
 
-        //목표 밸런스 설정창으로 이동
         View root = inflater.inflate(R.layout.fragment_goal_balance_list, container, false);
+
+        //목표 밸런스 설정창으로 이동
         CardView cv = (CardView) root.findViewById(R.id.cardView01);
         cv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +63,52 @@ public class GoalBalanceListFragment extends Fragment {
                 fragmentTransaction.replace( R.id.fragment_container, fragment );
                 fragmentTransaction.commit();
             }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.AddGoalBalance);
+        fab.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Fragment fragment = new SettingGoalBalanceFragment();
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace( R.id.fragment_container, fragment );
+                fragmentTransaction.commit();
+            }
+        });
+
+        //카드뷰 오래 누르면 카드뷰 삭제
+        CardView cardview = root.findViewById(R.id.cardView01);
+        // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+        final AlertDialog.Builder alBuilder = new AlertDialog.Builder(container.getContext());
+        cardview.setOnLongClickListener(new View.OnLongClickListener() {
+
+            public boolean onLongClick(final View view) {
+                alBuilder.setMessage("삭제하시겠습니까?");
+
+                // "예" 버튼을 누르면 실행되는 리스너
+                alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //RelativeLayout relative = (RelativeLayout) root.findViewById(R.id.relative);
+                        //relative.removeView(view);
+                        //db삭제 구현하기(아래)
+
+                    }
+                });
+                // "아니오" 버튼을 누르면 실행되는 리스너
+                alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return; // 아무런 작업도 하지 않고 돌아간다
+                    }
+                });
+                alBuilder.setTitle("목표 밸런스 삭제");
+                alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+
+                return false;
+            }
+
         });
 
         // Inflate the layout for this fragment
