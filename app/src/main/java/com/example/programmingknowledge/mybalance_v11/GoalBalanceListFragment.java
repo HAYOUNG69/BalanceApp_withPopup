@@ -42,16 +42,40 @@ public class GoalBalanceListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_goal_balance_list, container, false);
 
         //db읽기
         DBHelper helper = new DBHelper(container.getContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.rawQuery("select sleep, work, study, exercise, leisure, other, week from tb_goalbalance", null);
 
+        //DB에 데이터가 있으면
+        if(cursor.getColumnCount()>0){
+            //카드뷰 생성
+            RelativeLayout layout = (RelativeLayout)root.findViewById(R.id.relative);
+            while(cursor.moveToNext()) {
+               CardView card = new CardView(container.getContext());
+              //아랫줄 한줄 저거뭐지
+               CardView.LayoutParams params = new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
+                 card.setLayoutParams(params);
+                 card.setMinimumHeight(200);
+                  card.setMinimumWidth(1000);
+                  card.setContentPadding(15, 15, 15, 15);
+                    TextView tv = new TextView(container.getContext());
+                   tv.setText(cursor.getString(6));
+                 card.addView(tv);
+                  layout.addView(card);
+             }
 
-        View root = inflater.inflate(R.layout.fragment_goal_balance_list, container, false);
+            /*TextView tv2 = new TextView(container.getContext());
+            tv2.setPadding(15, 15, 15, 15);
+            cursor.moveToFirst();
+            tv2.setText(cursor.getString(6));
+            layout.addView(tv2);*/
+        }
 
-        //목표 밸런스 설정창으로 이동
+
+        //목표 밸런스 설정창으로 이동(카드뷰 눌렀을때)
         CardView cv = (CardView) root.findViewById(R.id.cardView01);
         cv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +89,7 @@ public class GoalBalanceListFragment extends Fragment {
             }
         });
 
+        //목표 밸런스 설정창으로 이동(액션버튼 눌렀을때)
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.AddGoalBalance);
         fab.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
