@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 //혜린's DBHelper ^_^
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     public DBHelper(Context context){
         super(context, "balanceappdb.db", null, DATABASE_VERSION);
     }
@@ -31,7 +31,6 @@ public class DBHelper extends SQLiteOpenHelper {
         if(newVersion == DATABASE_VERSION){
             db.execSQL("DROP TABLE IF EXISTS tb_goalbalance");
             db.execSQL("DROP TABLE IF EXISTS todaycount");
-
 
             onCreate(db);
         }
