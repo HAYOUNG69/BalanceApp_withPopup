@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 //혜린's DBHelper ^_^
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public DBHelper(Context context){
         super(context, "balanceappdb.db", null, DATABASE_VERSION);
     }
@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "sleep REAL,"+"work REAL,"+"study REAL,"+"exercise REAL,"+"leisure REAL,"+"other REAL,"+"week TEXT);";
     private static final String CREATE_TABLE_TODAYCOUNT = "CREATE TABLE todaycount "
                     +"(id INTEGER PRIMARY KEY AUTOINCREMENT, "+"place TEXT, "+"category TEXT,"
-                    +"starttime DATETIME,"+"endtime DATETIME, "+"week TEXT);";
+                    +"starttime TEXT,"+"endtime TEXT, "+"week TEXT);";
 
 
 
