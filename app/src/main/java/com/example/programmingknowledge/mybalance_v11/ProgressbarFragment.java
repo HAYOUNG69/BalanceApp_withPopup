@@ -1,5 +1,6 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
@@ -31,9 +33,11 @@ public class ProgressbarFragment extends Fragment {
     Button btnAdd;
     View view;
 
+    TextView tv1;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, Bundle savedInstanceState) {
         //DE
         final DBHelper helper = new DBHelper(container.getContext());
 
@@ -109,14 +113,39 @@ public class ProgressbarFragment extends Fragment {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                int g_work, b_work;
-//                //db 추가하기
-//                SQLiteDatabase db = helper.getWritableDatabase();
+                int g_work, b_work=0;
+//                int buffer ;
 //
-//                db.execSQL("select 'work' from tb_goalbalance where 'week=월'");
-//                db.close();
+                SQLiteDatabase db = helper.getWritableDatabase();
+                Cursor cursor = db.rawQuery("select work from tb_goalbalance where week='화' ",null);
 
-                progress1.setProgress(75);
+                if(cursor!=null && cursor.getCount() > 0)
+                {
+                    if (cursor.moveToFirst())
+                    {
+                        do {
+                            b_work = cursor.getInt(0);
+                        } while (cursor.moveToNext());
+                    }
+                }
+//                if(cursor.getColumnCount()>0) {
+//                    while (cursor.moveToNext()){
+//
+//                        b_work = cursor.getInt(3) ;}
+//                }
+//                else
+//                    b_work = 0;
+////                if(cursor.getColumnCount()>0){
+////                    tv1 = (TextView) view.findViewById(R.id.tv1);
+////        //            TextView tv1 = new TextView(container.getContext());
+////                    tv1.setText(cursor.getString(0));
+////
+////                }
+
+//
+                db.close();
+
+                progress1.setProgress(b_work*10);
                 progress2.setProgress(40);
                 progress3.setProgress(100);
                 progress4.setProgress(120);
