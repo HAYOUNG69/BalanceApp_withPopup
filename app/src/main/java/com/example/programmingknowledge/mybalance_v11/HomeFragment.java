@@ -1,5 +1,7 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.ListView;
 
 import org.qap.ctimelineview.TimelineRow;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -38,6 +41,7 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
 
+
         button = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
         //setFrag(0);
@@ -49,10 +53,8 @@ public class HomeFragment extends Fragment {
         });
 
         // Add to the List
-        for (int i = 0; i < 5; i++) {
-            //add the new row to the list
-            timelineRowsList.add(createTimelineRow(i));
-        }
+        timelineRowsList.add(createTimelineRow(0));
+
 
         // Create the Timeline Adapter
         myAdapter = new TimelineViewAdapter(getActivity(), 0, timelineRowsList,
@@ -117,4 +119,29 @@ public class HomeFragment extends Fragment {
 
         return myRow;
     }
+
+/*
+    //DB에 데이터 넣기
+    private void setData(DBHelper helper) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String place = "우리집";
+        String category = "home";
+        Date starttime = new Date();
+        Date endtime = new Date();
+        String week = "화";
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("place", place);
+        initialValues.put("category", category);
+        initialValues.put("startime", dateFormat.format(starttime));
+        initialValues.put("endtime", dateFormat.format(endtime));
+        initialValues.put("week", week);
+        long newRowId = db.insert("todaycount",
+                null,
+                initialValues);
+
+        db.close();
+    }*/
 }
