@@ -11,30 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-
-
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.DialogInterface;
-        import android.database.Cursor;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.os.Bundle;
-        import android.support.constraint.ConstraintLayout;
-        import android.support.design.widget.FloatingActionButton;
-        import android.support.design.widget.Snackbar;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.CardView;
-        import android.support.v7.widget.Toolbar;
-        import android.support.v7.app.AlertDialog;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class GoalBalanceListFragment extends Fragment {
@@ -57,22 +54,21 @@ public class GoalBalanceListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new SettingGoalBalanceFragment();
-
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace( R.id.fragment_container, fragment );
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
             }
         });
 
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.AddGoalBalance);
-        fab.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Fragment fragment = new SettingGoalBalanceFragment();
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace( R.id.fragment_container, fragment );
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
             }
         });

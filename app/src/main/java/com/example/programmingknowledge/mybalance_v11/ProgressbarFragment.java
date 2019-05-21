@@ -1,5 +1,6 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,10 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
+import org.w3c.dom.Text;
+
 public class ProgressbarFragment extends Fragment {
+
+    //DatabaseHelper myDB;
+    //myDB가 daily DB
 
     FragmentManager fm;
     FragmentTransaction tran;
@@ -21,23 +28,38 @@ public class ProgressbarFragment extends Fragment {
 
     Button bt1;
     Button button2;
+    Button btnAdd;
     View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        //DE
+        final DBHelper helper = new DBHelper(container.getContext());
+
         view = inflater.inflate(R.layout.fragment_progressbar, container, false);
 
-        bt1 = (Button)view.findViewById(R.id.button);
-        button2 = (Button)view.findViewById(R.id.button2);
+        bt1 = (Button) view.findViewById(R.id.button);
+        button2 = (Button) view.findViewById(R.id.button2);
+
+        btnAdd = (Button)view.findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDailybalance(v,helper);
+            }
+        });
+
         frag2 = new HomeFragment();
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setFrag(1);
             }
+
         });
 
-        final RoundCornerProgressBar progress1 = (RoundCornerProgressBar)view.findViewById(R.id.progressBar1);
+        final RoundCornerProgressBar progress1 = (RoundCornerProgressBar) view.findViewById(R.id.progressBar1);
         progress1.setProgressColor(Color.parseColor("#ff363636"));
         progress1.setProgressBackgroundColor(Color.parseColor("#ff454344"));
         progress1.setMax(100);
@@ -87,6 +109,13 @@ public class ProgressbarFragment extends Fragment {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                int g_work, b_work;
+//                //db 추가하기
+//                SQLiteDatabase db = helper.getWritableDatabase();
+//
+//                db.execSQL("select 'work' from tb_goalbalance where 'week=월'");
+//                db.close();
+
                 progress1.setProgress(75);
                 progress2.setProgress(40);
                 progress3.setProgress(100);
@@ -94,32 +123,45 @@ public class ProgressbarFragment extends Fragment {
                 progress5.setProgress(50);
             }
         });
-
-
-
-
         return view;
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.button2:
                 setFrag(1);
                 break;
         }
+
     }
-    public void setFrag(int n){
+
+    public void setFrag(int n) {
         fm = getFragmentManager();
         tran = fm.beginTransaction();
-        switch (n){
+        switch (n) {
             case 1:
                 tran.replace(R.id.fragment_container, frag2);
                 tran.commit();
                 break;
             //main_frame자리에 현재 frame이름
         }
+
+
     }
 
+    public void setDailybalance(View v, DBHelper helper) {
+
+
+
+        //db 추가하기
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('05-13','월',1,2,2,3,3,4,'수면 부족')");
+        db.close();
+
+
+    }
 
 
 }

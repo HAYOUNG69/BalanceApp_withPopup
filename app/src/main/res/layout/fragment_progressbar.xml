@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:isScrollContainer="false"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:paddingRight="16dp"
+    android:scrollbarAlwaysDrawVerticalTrack="false"
+    android:scrollbars="vertical">
 
     <Button
         android:id="@+id/button2"
@@ -13,14 +16,14 @@
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="16dp"
-        android:background="@drawable/timeline"/>
+        android:background="@drawable/timeline" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="62dp"
-        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
         android:text="오늘의 밸런스"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -29,8 +32,8 @@
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/text" >
+        android:layout_below="@id/text"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textView3"
@@ -65,8 +68,8 @@
         android:id="@+id/linearlayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/linearlayout1" >
+        android:layout_below="@id/linearlayout1"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textView4"
@@ -98,8 +101,8 @@
         android:id="@+id/linearlayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/linearlayout2" >
+        android:layout_below="@id/linearlayout2"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textView5"
@@ -131,8 +134,8 @@
         android:id="@+id/linearlayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/linearlayout3" >
+        android:layout_below="@id/linearlayout3"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textView6"
@@ -164,8 +167,8 @@
         android:id="@+id/linearlayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/linearlayout4" >
+        android:layout_below="@id/linearlayout4"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textView7"
@@ -195,24 +198,48 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:id="@+id/linearlayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearlayout5"
+
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/linearlayout6"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:text="datainsert" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/linearlayout5"
+            android:layout_alignTop="@+id/linearlayout6"
             android:layout_margin="5dp"
-            android:text="Balance"
-            android:layout_below="@id/linearlayout5" />
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Balance" />
 
 
         <TextView
             android:id="@+id/textView13"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/button"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:text="일이 많은 하루입니다!"
-            android:layout_below="@id/button" />
+            android:text="일이 많은 하루입니다!" />
+
+
+    </LinearLayout>
 
 
 </RelativeLayout>

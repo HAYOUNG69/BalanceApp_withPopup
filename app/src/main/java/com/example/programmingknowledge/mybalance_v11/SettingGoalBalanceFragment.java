@@ -11,36 +11,33 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-        import android.content.Context;
-        import android.content.Intent;
-        import android.database.sqlite.SQLiteDatabase;
-        import android.graphics.Color;
-        import android.os.Handler;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.support.v7.widget.CardView;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.View.OnTouchListener;
-        import android.view.ViewGroup;
-        import android.widget.Button;
-        import android.widget.CheckBox;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import org.w3c.dom.Text;
+import org.w3c.dom.Text;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
-        import static java.lang.Integer.parseInt;
-
-
-
+import static java.lang.Integer.parseInt;
 
 
 public class SettingGoalBalanceFragment extends Fragment implements View.OnClickListener {
@@ -51,7 +48,7 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
     View sleepView, workView, studyView, exerciseView, leisureView;
     CheckBox checkMon, checkTue, checkWed, checkThu, checkFri, checkSat, checkSun;
     ArrayList<CheckBox> checkBoxArrayList = new ArrayList<CheckBox>();
-    String checkedWeek="";
+    String checkedWeek = "";
 
 
     @Override
@@ -79,7 +76,7 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
         TextView tv = (TextView) root.findViewById(R.id.view);
         tv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setBalance(v,helper);
+                setBalance(v, helper);
             }
         });
 
@@ -90,7 +87,7 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
 
     //plus or minus
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         MyOnClick(v);
 
         //버튼 누르고있으면 반복 실행되게 하는 repeat메소드
@@ -107,47 +104,46 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
     }
 
 
-    public void InitializeView(View root)
-    {
-        sleepCountTv = (TextView)root.findViewById(R.id.sleepCount);
+    public void InitializeView(View root) {
+        sleepCountTv = (TextView) root.findViewById(R.id.sleepCount);
         sleepCount = parseInt(sleepCountTv.getText().toString());
-        sleepMinus = (Button)root.findViewById(R.id.sleepMinus);
-        sleepPlus = (Button)root.findViewById(R.id.sleepPlus);
-        sleepView = (View)root.findViewById(R.id.sleep);
+        sleepMinus = (Button) root.findViewById(R.id.sleepMinus);
+        sleepPlus = (Button) root.findViewById(R.id.sleepPlus);
+        sleepView = (View) root.findViewById(R.id.sleep);
 
-        workCountTv = (TextView)root.findViewById(R.id.workCount);
+        workCountTv = (TextView) root.findViewById(R.id.workCount);
         workCount = parseInt(workCountTv.getText().toString());
-        workMinus = (Button)root.findViewById(R.id.workMinus);
-        workPlus = (Button)root.findViewById(R.id.workPlus);
-        workView = (View)root.findViewById(R.id.work);
+        workMinus = (Button) root.findViewById(R.id.workMinus);
+        workPlus = (Button) root.findViewById(R.id.workPlus);
+        workView = (View) root.findViewById(R.id.work);
 
-        studyCountTv = (TextView)root.findViewById(R.id.studyCount);
+        studyCountTv = (TextView) root.findViewById(R.id.studyCount);
         studyCount = parseInt(studyCountTv.getText().toString());
-        studyMinus = (Button)root.findViewById(R.id.studyMinus);
-        studyPlus = (Button)root.findViewById(R.id.studyPlus);
-        studyView = (View)root.findViewById(R.id.study);
+        studyMinus = (Button) root.findViewById(R.id.studyMinus);
+        studyPlus = (Button) root.findViewById(R.id.studyPlus);
+        studyView = (View) root.findViewById(R.id.study);
 
-        exerciseCountTv = (TextView)root.findViewById(R.id.exerciseCount);
+        exerciseCountTv = (TextView) root.findViewById(R.id.exerciseCount);
         exerciseCount = parseInt(exerciseCountTv.getText().toString());
-        exerciseMinus = (Button)root.findViewById(R.id.exerciseMinus);
-        exercisePlus = (Button)root.findViewById(R.id.exercisePlus);
-        exerciseView = (View)root.findViewById(R.id.exercise);
+        exerciseMinus = (Button) root.findViewById(R.id.exerciseMinus);
+        exercisePlus = (Button) root.findViewById(R.id.exercisePlus);
+        exerciseView = (View) root.findViewById(R.id.exercise);
 
-        leisureCountTv = (TextView)root.findViewById(R.id.leisureCount);
+        leisureCountTv = (TextView) root.findViewById(R.id.leisureCount);
         leisureCount = parseInt(leisureCountTv.getText().toString());
-        leisureMinus = (Button)root.findViewById(R.id.leisureMinus);
-        leisurePlus = (Button)root.findViewById(R.id.leisurePlus);
-        leisureView = (View)root.findViewById(R.id.leisure);
+        leisureMinus = (Button) root.findViewById(R.id.leisureMinus);
+        leisurePlus = (Button) root.findViewById(R.id.leisurePlus);
+        leisureView = (View) root.findViewById(R.id.leisure);
 
-        othersCountTv = (TextView)root.findViewById(R.id.othersCount);
+        othersCountTv = (TextView) root.findViewById(R.id.othersCount);
 
-        checkMon = (CheckBox)root.findViewById(R.id.CheckMon);
-        checkTue = (CheckBox)root.findViewById(R.id.CheckTue);
-        checkWed = (CheckBox)root.findViewById(R.id.CheckWed);
-        checkThu = (CheckBox)root.findViewById(R.id.CheckThu);
-        checkFri = (CheckBox)root.findViewById(R.id.CheckFri);
-        checkSat = (CheckBox)root.findViewById(R.id.CheckSat);
-        checkSun = (CheckBox)root.findViewById(R.id.CheckSun);
+        checkMon = (CheckBox) root.findViewById(R.id.CheckMon);
+        checkTue = (CheckBox) root.findViewById(R.id.CheckTue);
+        checkWed = (CheckBox) root.findViewById(R.id.CheckWed);
+        checkThu = (CheckBox) root.findViewById(R.id.CheckThu);
+        checkFri = (CheckBox) root.findViewById(R.id.CheckFri);
+        checkSat = (CheckBox) root.findViewById(R.id.CheckSat);
+        checkSun = (CheckBox) root.findViewById(R.id.CheckSun);
 
         checkBoxArrayList.add(checkMon);
         checkBoxArrayList.add(checkTue);
@@ -159,109 +155,108 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
     }
 
 
-    public void MyOnClick(View view)
-    {
-        others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
+    public void MyOnClick(View view) {
+        others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
         switch (view.getId()) {
             case R.id.sleepMinus:
-                if(sleepCount==0) break;
-                sleepCount-=0.5;
-                sleepCountTv.setText(""+sleepCount);
-                sleepView.getLayoutParams().width=(int)(sleepCount*40);
+                if (sleepCount == 0) break;
+                sleepCount -= 0.5;
+                sleepCountTv.setText("" + sleepCount);
+                sleepView.getLayoutParams().width = (int) (sleepCount * 40);
                 sleepView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
             case R.id.sleepPlus:
-                if(others==0) break;
-                sleepCount+=0.5;
-                sleepCountTv.setText(""+sleepCount);
-                sleepView.getLayoutParams().width=(int)(sleepCount*40);
+                if (others == 0) break;
+                sleepCount += 0.5;
+                sleepCountTv.setText("" + sleepCount);
+                sleepView.getLayoutParams().width = (int) (sleepCount * 40);
                 sleepView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
 
             case R.id.workMinus:
-                if(workCount==0) break;
-                workCount-=0.5;
-                workCountTv.setText(""+workCount);
-                workView.getLayoutParams().width=(int)(workCount*40);
+                if (workCount == 0) break;
+                workCount -= 0.5;
+                workCountTv.setText("" + workCount);
+                workView.getLayoutParams().width = (int) (workCount * 40);
                 workView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
             case R.id.workPlus:
-                if(others==0) break;
-                workCount+=0.5;
-                workCountTv.setText(""+workCount);
-                workView.getLayoutParams().width=(int)(workCount*40);
+                if (others == 0) break;
+                workCount += 0.5;
+                workCountTv.setText("" + workCount);
+                workView.getLayoutParams().width = (int) (workCount * 40);
                 workView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
 
             case R.id.studyMinus:
-                if(studyCount==0) break;
-                studyCount-=0.5;
-                studyCountTv.setText(""+studyCount);
-                studyView.getLayoutParams().width=(int)(studyCount*40);
+                if (studyCount == 0) break;
+                studyCount -= 0.5;
+                studyCountTv.setText("" + studyCount);
+                studyView.getLayoutParams().width = (int) (studyCount * 40);
                 studyView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
             case R.id.studyPlus:
-                if(others==0) break;
-                studyCount+=0.5;
-                studyCountTv.setText(""+studyCount);
-                studyView.getLayoutParams().width=(int)(studyCount*40);
+                if (others == 0) break;
+                studyCount += 0.5;
+                studyCountTv.setText("" + studyCount);
+                studyView.getLayoutParams().width = (int) (studyCount * 40);
                 workView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
 
             case R.id.exerciseMinus:
-                if(exerciseCount==0) break;
-                exerciseCount-=0.5;
-                exerciseCountTv.setText(""+exerciseCount);
-                exerciseView.getLayoutParams().width=(int)(exerciseCount*40);
+                if (exerciseCount == 0) break;
+                exerciseCount -= 0.5;
+                exerciseCountTv.setText("" + exerciseCount);
+                exerciseView.getLayoutParams().width = (int) (exerciseCount * 40);
                 exerciseView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
             case R.id.exercisePlus:
-                if(others==0) break;
-                exerciseCount+=0.5;
-                exerciseCountTv.setText(""+exerciseCount);
-                exerciseView.getLayoutParams().width=(int)(exerciseCount*40);
+                if (others == 0) break;
+                exerciseCount += 0.5;
+                exerciseCountTv.setText("" + exerciseCount);
+                exerciseView.getLayoutParams().width = (int) (exerciseCount * 40);
                 workView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
 
             case R.id.leisureMinus:
-                if(leisureCount==0) break;
-                leisureCount-=0.5;
-                leisureCountTv.setText(""+leisureCount);
-                leisureView.getLayoutParams().width=(int)(leisureCount*40);
+                if (leisureCount == 0) break;
+                leisureCount -= 0.5;
+                leisureCountTv.setText("" + leisureCount);
+                leisureView.getLayoutParams().width = (int) (leisureCount * 40);
                 leisureView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
             case R.id.leisurePlus:
-                if(others==0) break;
-                leisureCount+=0.5;
-                leisureCountTv.setText(""+leisureCount);
-                leisureView.getLayoutParams().width=(int)(leisureCount*40);
+                if (others == 0) break;
+                leisureCount += 0.5;
+                leisureCountTv.setText("" + leisureCount);
+                leisureView.getLayoutParams().width = (int) (leisureCount * 40);
                 workView.requestLayout();
-                others = 24-(sleepCount+workCount+studyCount+exerciseCount+leisureCount);
-                othersCountTv.setText(""+others);
+                others = 24 - (sleepCount + workCount + studyCount + exerciseCount + leisureCount);
+                othersCountTv.setText("" + others);
                 break;
         }
     }
 
 
-    public void setBalance(View v, DBHelper helper){
+    public void setBalance(View v, DBHelper helper) {
 
         //LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //View outerview = inflater.inflate(R.layout.content_balance_list, null);
@@ -272,19 +267,19 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace( R.id.fragment_container, fragment );
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
 
 
         //db 추가하기
         SQLiteDatabase db = helper.getWritableDatabase();
-        for(int i=0;i<checkBoxArrayList.size();i++){
-            if(checkBoxArrayList.get(i).isChecked()){
+        for (int i = 0; i < checkBoxArrayList.size(); i++) {
+            if (checkBoxArrayList.get(i).isChecked()) {
                 checkedWeek += checkBoxArrayList.get(i).getText();
             }
         }
-        db.execSQL("insert into tb_goalbalance (sleep, work, study, exercise, leisure, other, week) values ("+
-                sleepCount+","+workCount+","+studyCount+","+exerciseCount+","+leisureCount+","+others+",'"+checkedWeek+"')");
+        db.execSQL("insert into tb_goalbalance (sleep, work, study, exercise, leisure, other, week) values (" +
+                sleepCount + "," + workCount + "," + studyCount + "," + exerciseCount + "," + leisureCount + "," + others + ",'" + checkedWeek + "')");
         db.close();
 
         //onBackPressed();
@@ -299,13 +294,14 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
 
     }
 
-    public void repeat(final Button button){
+    public void repeat(final Button button) {
         button.setOnTouchListener(new View.OnTouchListener() {
 
             private Handler mHandler;
 
-            @Override public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mHandler != null) return true;
                         mHandler = new Handler();
@@ -321,7 +317,8 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
             }
 
             Runnable mAction = new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                     MyOnClick(button);
                     mHandler.postDelayed(this, 100);
                 }
