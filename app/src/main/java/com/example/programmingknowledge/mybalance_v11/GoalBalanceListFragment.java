@@ -1,7 +1,5 @@
 package com.example.programmingknowledge.mybalance_v11;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,30 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
-
-
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.DialogInterface;
+import android.content.DialogInterface;
         import android.database.Cursor;
         import android.database.sqlite.SQLiteDatabase;
-        import android.os.Bundle;
-        import android.support.constraint.ConstraintLayout;
-        import android.support.design.widget.FloatingActionButton;
-        import android.support.design.widget.Snackbar;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.CardView;
-        import android.support.v7.widget.Toolbar;
-        import android.support.v7.app.AlertDialog;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.RelativeLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
+import android.support.v7.app.AlertDialog;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout;
         import android.widget.TextView;
-        import android.widget.Toast;
 
 
 public class GoalBalanceListFragment extends Fragment {
@@ -52,20 +35,37 @@ public class GoalBalanceListFragment extends Fragment {
         //DB에 데이터가 있으면
         if(cursor.getColumnCount()>0){
             //카드뷰 생성
-            RelativeLayout layout = (RelativeLayout)root.findViewById(R.id.relative);
+            LinearLayout layout = (LinearLayout)root.findViewById(R.id.linear);
             while(cursor.moveToNext()) {
                CardView card = new CardView(container.getContext());
-              //아랫줄 한줄 저거뭐지
-               CardView.LayoutParams params = new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT, CardView.LayoutParams.WRAP_CONTENT);
-                 card.setLayoutParams(params);
-                 card.setMinimumHeight(200);
-                  card.setMinimumWidth(1000);
+                  card.setMinimumHeight(200);
+                  card.setMinimumWidth(1050);
                   card.setContentPadding(15, 15, 15, 15);
+                  card.setId(cursor.getColumnIndex("id"));
+
                     TextView tv = new TextView(container.getContext());
                    tv.setText(cursor.getString(6));
                  card.addView(tv);
+
+                 //카드뷰 겹치지 않게.
+                /*LinearLayout.LayoutParams cardLayoutParams = new LinearLayout.LayoutParams
+                        (ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                cardLayoutParams.addRule(LinearLayout.BELOW, R.id.cardView01);
+                card.setLayoutParams(cardLayoutParams);*/
+
+
                   layout.addView(card);
-             }
+
+                //아랫줄 한줄 저거뭐지
+                CardView.MarginLayoutParams margin = new CardView.MarginLayoutParams(card.getLayoutParams());
+                margin.setMargins(30,30,30,0);
+                CardView.LayoutParams params = new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, CardView.LayoutParams.WRAP_CONTENT);
+
+
+                card.setLayoutParams(new LinearLayout.LayoutParams(params));
+                card.setLayoutParams(new LinearLayout.LayoutParams(margin));
+
+            }
 
             /*TextView tv2 = new TextView(container.getContext());
             tv2.setPadding(15, 15, 15, 15);
@@ -115,7 +115,7 @@ public class GoalBalanceListFragment extends Fragment {
                 alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //RelativeLayout relative = (RelativeLayout) root.findViewById(R.id.relative);
+                        //LinearLayout relative = (LinearLayout) root.findViewById(R.id.relative);
                         //relative.removeView(view);
                         //db삭제 구현하기(아래)
 
