@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "sleep REAL,"+"work REAL,"+"study REAL,"+"exercise REAL,"+"leisure REAL,"+"other REAL,"+"week TEXT);";
     private static final String CREATE_TABLE_TODAYCOUNT = "CREATE TABLE todaycount "
                     +"(id INTEGER PRIMARY KEY AUTOINCREMENT, "+"place TEXT, "+"category TEXT,"
-                    +"starttime DATETIME,"+"endtime DATETIME, "+"week TEXT);";
+                    +"starttime TEXT,"+"endtime TEXT, "+"week TEXT);";
 
 
 
@@ -31,7 +31,6 @@ public class DBHelper extends SQLiteOpenHelper {
         if(newVersion == DATABASE_VERSION){
             db.execSQL("DROP TABLE IF EXISTS tb_goalbalance");
             db.execSQL("DROP TABLE IF EXISTS todaycount");
-
 
             onCreate(db);
         }
