@@ -1,5 +1,7 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.qap.ctimelineview.TimelineRow;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -30,13 +34,16 @@ public class HomeFragment extends Fragment {
     //Create Timeline Rows List
     private ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
     ArrayAdapter<TimelineRow> myAdapter;
+    //DBHelper helper = new DBHelper(getContext());
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         //return inflater.inflate(R.layout.fragment_home,container,false);
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
+
+        final DBHelper helper = new DBHelper(container.getContext());
 
         button = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
@@ -48,11 +55,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //DB데이터 넣기
+        setData(helper);
+
+        //DB에서 데이터 불러와서 timelineList에 저장
+
+
         // Add to the List
-        for (int i = 0; i < 5; i++) {
-            //add the new row to the list
-            timelineRowsList.add(createTimelineRow(i));
-        }
+        timelineRowsList.add(createTimelineRow(0));
+
 
         // Create the Timeline Adapter
         myAdapter = new TimelineViewAdapter(getActivity(), 0, timelineRowsList,
@@ -117,4 +128,29 @@ public class HomeFragment extends Fragment {
 
         return myRow;
     }
+
+
+    //DB에 데이터 넣기
+    private void setData(DBHelper helper) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String place = "우리집";
+        String category = "home";
+        Date starttime = new Date();
+        Date endtime = new Date();
+        String week = "화";
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("place", place);
+        initialValues.put("category", category);
+        initialValues.put("startime", dateFormat.format(starttime));
+        initialValues.put("endtime", dateFormat.format(endtime));
+        initialValues.put("week", week);
+        long newRowId = db.insert("todaycount",
+                null,
+                initialValues);
+
+    }
+
 }

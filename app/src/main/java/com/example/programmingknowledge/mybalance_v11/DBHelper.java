@@ -9,21 +9,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public DBHelper(Context context){
-        super(context, "goalbalancedb", null, DATABASE_VERSION);
+        super(context, "balanceappdb.db", null, DATABASE_VERSION);
     }
+    private static final String CREATE_TABLE_GOALBALANCE = "CREATE TABLE tb_goalbalance "+
+            "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+            "sleep REAL,"+"work REAL,"+"study REAL,"+"exercise REAL,"+"leisure REAL,"+"other REAL,"+"week TEXT);";
+    private static final String CREATE_TABLE_TODAYCOUNT = "CREATE TABLE todaycount "
+                    +"(id INTEGER PRIMARY KEY AUTOINCREMENT, "+"place TEXT, "+"category TEXT,"
+                    +"starttime DATETIME,"+"endtime DATETIME, "+"week TEXT);";
+
+
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        String goalbalanceSQL = "CREATE TABLE tb_goalbalance "+
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                "sleep REAL,"+"work REAL,"+"study REAL,"+"exercise REAL,"+"leisure REAL,"+"other REAL,"+"week TEXT);";
-        db.execSQL(goalbalanceSQL);
+        db.execSQL(CREATE_TABLE_GOALBALANCE);
+        db.execSQL(CREATE_TABLE_TODAYCOUNT);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         if(newVersion == DATABASE_VERSION){
-            db.execSQL("drop table tb_goalbalance");
+            db.execSQL("DROP TABLE IF EXISTS tb_goalbalance");
+            db.execSQL("DROP TABLE IF EXISTS todaycount");
+
+
             onCreate(db);
         }
     }
