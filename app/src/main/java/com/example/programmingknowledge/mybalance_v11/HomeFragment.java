@@ -26,6 +26,7 @@ import java.util.Date;
 public class HomeFragment extends Fragment {
 
     Button button;
+    Button button2; ///////////
     FragmentManager fm;
     FragmentTransaction tran;
     ProgressbarFragment frag1;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_home,container,false);
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
-
+        final DBHelper helper = new DBHelper(getContext());
 
         button = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
@@ -51,6 +52,16 @@ public class HomeFragment extends Fragment {
                 setFrag(0);
             }
         });
+
+        //db insert 버튼
+        button2 = (Button)view.findViewById(R.id.insert);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setData(helper);
+            }
+        });
+
 
         // Add to the List
         timelineRowsList.add(createTimelineRow(0));
@@ -89,6 +100,9 @@ public class HomeFragment extends Fragment {
 
     private TimelineRow createTimelineRow(int id) {
 
+        //SimpleDateFormat sdfformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //Date date = sdfformat.parse("");
+
         // Create new timeline row (pass your Id)
         TimelineRow myRow = new TimelineRow(id);
 
@@ -120,28 +134,12 @@ public class HomeFragment extends Fragment {
         return myRow;
     }
 
-/*
+
     //DB에 데이터 넣기
     private void setData(DBHelper helper) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        String place = "우리집";
-        String category = "home";
-        Date starttime = new Date();
-        Date endtime = new Date();
-        String week = "화";
-
-        ContentValues initialValues = new ContentValues();
-        initialValues.put("place", place);
-        initialValues.put("category", category);
-        initialValues.put("startime", dateFormat.format(starttime));
-        initialValues.put("endtime", dateFormat.format(endtime));
-        initialValues.put("week", week);
-        long newRowId = db.insert("todaycount",
-                null,
-                initialValues);
-
-        db.close();
-    }*/
+                SQLiteDatabase db = helper.getWritableDatabase();
+                db.execSQL("insert into todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
+                        new String[]{"우리집", "home", "2019-05-21 11:37:11", "2019-05-21 18:37:11", "수"});
+                db.close();
+    }
 }
