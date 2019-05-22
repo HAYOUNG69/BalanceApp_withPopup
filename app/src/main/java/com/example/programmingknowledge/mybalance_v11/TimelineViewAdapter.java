@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -83,8 +84,9 @@ public class TimelineViewAdapter extends ArrayAdapter<TimelineRow> {
             rowUpperLine.getLayoutParams().width = pixels2;
         }
 
+        SimpleDateFormat transFormat = new SimpleDateFormat("a hh시 mm분");
 
-        rowDate.setText(DateFormat.getDateTimeInstance().format(row.getDate()));
+        rowDate.setText(transFormat.format(row.getDate()));
         if (row.getDateColor() != 0)
             rowDate.setTextColor(row.getDateColor());
         if (row.getTitle() == null)
@@ -136,49 +138,6 @@ public class TimelineViewAdapter extends ArrayAdapter<TimelineRow> {
 
         return view;
     }
-
-
-   /* private String getPastTime(Date date) {
-
-        if (date == null) return "";
-        StringBuilder dateText = new StringBuilder();
-        Date today = new Date();
-        long diff = (today.getTime() - date.getTime()) / 1000;
-
-        long years = diff / (60 * 60 * 24 * 30 * 12);
-        long months = (diff / (60 * 60 * 24 * 30)) % 12;
-        long days = (diff / (60 * 60 * 24)) % 30;
-        long hours = (diff / (60 * 60)) % 24;
-        long minutes = (diff / 60) % 60;
-        long seconds = diff % 60;
-
-        if (years > 0) {
-            appendPastTime(dateText, years, R.plurals.years, months, R.plurals.months);
-        } else if (months > 0) {
-            appendPastTime(dateText, months, R.plurals.months, days, R.plurals.days);
-        } else if (days > 0) {
-            appendPastTime(dateText, days, R.plurals.days, hours, R.plurals.hours);
-        } else if (hours > 0) {
-            appendPastTime(dateText, hours, R.plurals.hours, minutes, R.plurals.minutes);
-        } else if (minutes > 0) {
-            appendPastTime(dateText, minutes, R.plurals.minutes, seconds, R.plurals.seconds);
-        } else if (seconds >= 0) {
-            dateText.append(res.getQuantityString(R.plurals.seconds, (int) seconds, (int) seconds));
-        }
-
-        return dateText.toString();
-    }
-
-    private void appendPastTime(StringBuilder s,
-                                long timespan, int nameId,
-                                long timespanNext, int nameNextId) {
-
-        s.append(res.getQuantityString(nameId, (int) timespan, timespan));
-        if (timespanNext > 0) {
-            s.append(' ').append(AND).append(' ');
-            s.append(res.getQuantityString(nameNextId, (int) timespanNext, timespanNext));
-        }
-    }*/
 
     private ArrayList<TimelineRow> rearrangeByDate(ArrayList<TimelineRow> objects) {
         if (objects.get(0) == null) return objects;

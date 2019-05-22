@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
         }
 
         //날짜 String -> Date
-        SimpleDateFormat sdfformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdfformat = new SimpleDateFormat("HH:mm:ss");
         Date date = null;
         try {
             date = sdfformat.parse(starttime);
@@ -169,19 +169,19 @@ public class HomeFragment extends Fragment {
     private void setData(View v, DBHelper helper) {
         SQLiteDatabase db = helper.getWritableDatabase();
         //db.execSQL("delete from tb_todaycount");
-        db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
-                new String[]{"한강동아아파트", "수면", "2019-05-21 23:49:16", "2019-05-22 06:18:26", "수"});
-        db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
-                new String[]{"MONO CHEESE", "공부", "2019-05-22 17:00:41", "2019-05-22 20:30:19", "수"});
-        db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
-                new String[]{"노래방", "여가", "2019-05-22 21:14:47", "2019-05-22 22:17:22", "수"});
+        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
+                new String[]{"2019-05-21", "한강동아아파트", "수면", "01:15:16", "06:18:26"});
+        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
+                new String[]{"2019-05-22", "경기대학교", "공부", "09:05:00", "11:55:12"});
+        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
+                new String[]{"2019-05-23", "헬스장", "운동", "07:27:35", "08:46:33"});
         db.close();
     }
 
     //DB에서 데이터 불러오기
     private void putData(View v, DBHelper helper) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from tb_todaycount",null);
+        Cursor cursor = db.rawQuery("select * from tb_timeline",null);
         int i = 0;
 
         if(cursor.getCount()==0) return;
