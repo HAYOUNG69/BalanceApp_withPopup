@@ -12,10 +12,10 @@ import java.util.Date;
 //혜린's DBHelper ^_^
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
 
     public DBHelper(Context context){
-        super(context, "goalbalancedb", null, DATABASE_VERSION);
+        super(context, "balanceappdb", null, DATABASE_VERSION);
 
     }
 
@@ -34,9 +34,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(daySQL);
 
         //현재 측정 테이블
-        String todaySQL = "CREATE TABLE tb_todaycount "+
+        String todaySQL = "CREATE TABLE tb_timeline "+
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                "place TEXT,"+ "category TEXT,"+ "starttime TEXT,"+"endtime TEXT,"+"week TEXT);";
+                "date TEXT,"+"place TEXT,"+"category TEXT,"+"starttime TEXT,"+"endtime TEXT);";
         db.execSQL(todaySQL);
     }
 
