@@ -50,7 +50,6 @@ public class SettingGoalBalanceFragment extends Fragment implements View.OnClick
     ArrayList<CheckBox> checkBoxArrayList = new ArrayList<CheckBox>();
     String checkedWeek = "";
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
