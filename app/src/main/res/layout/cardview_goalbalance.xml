@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView android:id="@+id/cardView"
+    android:layout_width="395dp"
+    android:layout_height="100dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.25"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:longClickable="true">
+
+    <LinearLayout
+        android:id="@+id/all"
+        android:layout_width="960px"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#888888"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.419">
+
+        <View
+            android:id="@+id/sleep"
+            android:layout_width="320px"
+            android:layout_height="wrap_content"
+            android:background="#414766"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/work"
+            android:layout_width="320px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_toRightOf="@id/sleep"
+            android:background="#F98583" />
+
+        <View
+            android:id="@+id/study"
+            android:layout_width="120px"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/work"
+            android:background="#B4CC65" />
+
+        <View
+            android:id="@+id/exercise"
+            android:layout_width="80px"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/study"
+            android:background="#FBB06D" />
+
+        <View
+            android:id="@+id/leisure"
+            android:layout_width="80px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_toRightOf="@id/exercise"
+            android:background="#C7ACEE" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="55dp"
+        android:text="월 수 금"
+        android:textSize="20sp" />
+    //게이지 레이아웃
+
+</android.support.v7.widget.CardView>
