@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:isScrollContainer="false"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:scrollbarAlwaysDrawVerticalTrack="false"
     android:scrollbars="vertical">
 
@@ -13,8 +15,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/timeline" />
 
     <TextView
@@ -31,16 +32,14 @@
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_below="@id/text"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="false">
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
+
             android:layout_marginTop="5dp"
             android:text="수면"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -61,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
-            android:text="75%" />
+            />
 
     </LinearLayout>
 
@@ -69,8 +68,6 @@
         android:id="@+id/linearlayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_below="@id/linearlayout1"
         android:layout_centerHorizontal="true">
 
@@ -78,7 +75,6 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
             android:layout_marginTop="5dp"
             android:text="일" />
 
@@ -96,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
-            android:text="40%" />
+            />
 
     </LinearLayout>
 
@@ -104,8 +100,6 @@
         android:id="@+id/linearlayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_below="@id/linearlayout2"
         android:layout_centerHorizontal="true">
 
@@ -113,7 +107,6 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
             android:layout_marginTop="5dp"
             android:text="공부" />
 
@@ -131,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
-            android:text="100%" />
+            />
 
     </LinearLayout>
 
@@ -139,8 +132,6 @@
         android:id="@+id/linearlayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_below="@id/linearlayout3"
         android:layout_centerHorizontal="true">
 
@@ -148,7 +139,6 @@
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
             android:layout_marginTop="5dp"
             android:text="운동" />
 
@@ -174,8 +164,6 @@
         android:id="@+id/linearlayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_below="@id/linearlayout4"
         android:layout_centerHorizontal="true">
 
@@ -183,7 +171,6 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
             android:layout_marginTop="5dp"
             android:text="여가" />
 
@@ -201,58 +188,46 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
-            android:text="50%"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="379dp" />
     </LinearLayout>
 
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/linearlayout6"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/linearlayout5"-->
-
-        <!--android:layout_marginTop="6dp"-->
-        <!--android:orientation="horizontal">-->
-
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="352dp"
-        android:text="datainsert" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearlayout6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/linearlayout5"
-        android:layout_toRightOf="@+id/btnAdd"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="Balance" />
+
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="datainsert" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linearlayout5"
+
+            android:layout_toRightOf="@+id/btnAdd"
+            android:text="Balance" />
 
 
+    </LinearLayout>
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_below="@id/btnAdd"
-        android:layout_marginTop="47dp"
+        android:layout_below="@id/linearlayout6"
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:text="일이 많은 하루입니다!" />
-
-
-    <!--</LinearLayout>-->
 
 
 </RelativeLayout>

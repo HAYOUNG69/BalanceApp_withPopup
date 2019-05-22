@@ -34,7 +34,7 @@ public class ProgressbarFragment extends Fragment {
     Button btnAdd;
     View view;
 
-    TextView tv1;
+    TextView textView8, textView9, textView10, textView11, textView12;
 
     @Nullable
     @Override
@@ -45,14 +45,17 @@ public class ProgressbarFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_progressbar, container, false);
 
+
+
+
         bt1 = (Button) view.findViewById(R.id.button);
         button2 = (Button) view.findViewById(R.id.button2);
 
-        btnAdd = (Button)view.findViewById(R.id.btnAdd);
+        btnAdd = (Button) view.findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDailybalance(v,helper);
+                setDailybalance(v, helper);
             }
         });
 
@@ -118,31 +121,31 @@ public class ProgressbarFragment extends Fragment {
 
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='월' ",null);
-                Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='월' ",null);
+                Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='월' ", null);
+                Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='월' ", null);
 
                 int[] goal = new int[5];
                 int[] measured = new int[5];
 
-                if(cursor1.getCount()==0 || cursor2.getCount()==0){
-                    showMessage("Error","Nothing found");
+                if (cursor1.getCount() == 0 || cursor2.getCount() == 0) {
+                    showMessage("Error", "Nothing found");
                     return;
                 }
-                while(cursor1.moveToNext()){
+                while (cursor1.moveToNext()) {
                     goal[0] = cursor1.getInt(cursor1.getColumnIndex("sleep"));
                     goal[1] = cursor1.getInt(cursor1.getColumnIndex("work"));
                     goal[2] = cursor1.getInt(cursor1.getColumnIndex("study"));
                     goal[3] = cursor1.getInt(cursor1.getColumnIndex("exercise"));
                     goal[4] = cursor1.getInt(cursor1.getColumnIndex("leisure"));
 
-                    for(int i=0;i<4;i++){
-                        if(goal[i]==0){
-                            goal[i]=1;
+                    for (int i = 0; i < 4; i++) {
+                        if (goal[i] == 0) {
+                            goal[i] = 1;
                         }
                     }
                 }
 
-                while(cursor2.moveToNext()){
+                while (cursor2.moveToNext()) {
                     measured[0] = cursor2.getInt(cursor2.getColumnIndex("sleep"));
                     measured[1] = cursor2.getInt(cursor2.getColumnIndex("work"));
                     measured[2] = cursor2.getInt(cursor2.getColumnIndex("study"));
@@ -177,11 +180,23 @@ public class ProgressbarFragment extends Fragment {
 
                 db.close();
 
-                progress1.setProgress(measured[0]/goal[0]*100);
-                progress2.setProgress(measured[1]/goal[1]*100);
-                progress3.setProgress(measured[2]/goal[2]*100);
-                progress4.setProgress(measured[3]/goal[3]*100);
-                progress5.setProgress(measured[4]/goal[4]*100);
+                progress1.setProgress(measured[0] / goal[0] * 100);
+                progress2.setProgress(measured[1] / goal[1] * 100);
+                progress3.setProgress(measured[2] / goal[2] * 100);
+                progress4.setProgress(measured[3] / goal[3] * 100);
+                progress5.setProgress(measured[4] / goal[4] * 100);
+
+                textView8 = (TextView) view.findViewById(R.id.textView8);
+                textView8.setText("" + progress1.getProgress());
+                textView9 = (TextView) view.findViewById(R.id.textView9);
+                textView9.setText("" + progress2.getProgress());
+                textView10 = (TextView) view.findViewById(R.id.textView10);
+                textView10.setText("" + progress3.getProgress());
+                textView11 = (TextView) view.findViewById(R.id.textView11);
+                textView11.setText("" + progress4.getProgress());
+                textView12 = (TextView) view.findViewById(R.id.textView12);
+                textView12.setText("" + progress5.getProgress());
+
             }
         });
         return view;
@@ -214,7 +229,6 @@ public class ProgressbarFragment extends Fragment {
     public void setDailybalance(View v, DBHelper helper) {
 
 
-
         //db 추가하기
         SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -224,7 +238,7 @@ public class ProgressbarFragment extends Fragment {
 
     }
 
-    public void showMessage(String title, String Message){
+    public void showMessage(String title, String Message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setCancelable(true);
         builder.setTitle(title);
