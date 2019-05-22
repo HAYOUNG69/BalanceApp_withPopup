@@ -166,11 +166,15 @@ public class HomeFragment extends Fragment {
 
     //DB에 데이터 넣기
     private void setData(View v, DBHelper helper) {
-                SQLiteDatabase db = helper.getWritableDatabase();
-                //db.execSQL("delete from tb_todaycount");
-                db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
-                        new String[]{"MONO CHEESE", "공부", "2019-05-22 17:00:41", "2019-05-22 20:30:19", "수"});
-                db.close();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //db.execSQL("delete from tb_todaycount");
+        db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
+                new String[]{"한강동아아파트", "수면", "2019-05-21 23:49:16", "2019-05-22 06:18:26", "수"});
+        db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
+                new String[]{"MONO CHEESE", "공부", "2019-05-22 17:00:41", "2019-05-22 20:30:19", "수"});
+        db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
+                new String[]{"노래방", "여가", "2019-05-22 21:14:47", "2019-05-22 22:17:22", "수"});
+        db.close();
     }
 
     //DB에서 데이터 불러오기
