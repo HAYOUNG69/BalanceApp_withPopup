@@ -218,6 +218,13 @@
             android:layout_toRightOf="@+id/btnAdd"
             android:text="Balance" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
 
     </LinearLayout>
     <TextView
