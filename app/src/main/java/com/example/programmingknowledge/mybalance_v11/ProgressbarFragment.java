@@ -41,6 +41,7 @@ public class ProgressbarFragment extends Fragment {
         //DE
         final DBHelper helper = new DBHelper(container.getContext());
 
+
         view = inflater.inflate(R.layout.fragment_progressbar, container, false);
 
         bt1 = (Button) view.findViewById(R.id.button);
@@ -114,10 +115,11 @@ public class ProgressbarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int g_work, b_work=0;
-//                int buffer ;
-//
+
+
                 SQLiteDatabase db = helper.getWritableDatabase();
-                Cursor cursor = db.rawQuery("select work from tb_goalbalance where week='화' ",null);
+
+                Cursor cursor = db.rawQuery("select work from tb_dailybalance where week='화' ",null);
 
                 if(cursor!=null && cursor.getCount() > 0)
                 {
@@ -131,10 +133,10 @@ public class ProgressbarFragment extends Fragment {
 
                 db.close();
 
-                progress1.setProgress(b_work*10);
-                progress2.setProgress(40);
-                progress3.setProgress(100);
-                progress4.setProgress(120);
+                progress1.setProgress(50);
+                progress2.setProgress(50);
+                progress3.setProgress(50);
+                progress4.setProgress(50);
                 progress5.setProgress(50);
             }
         });
