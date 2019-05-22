@@ -128,21 +128,7 @@ public class ProgressbarFragment extends Fragment {
                         } while (cursor.moveToNext());
                     }
                 }
-//                if(cursor.getColumnCount()>0) {
-//                    while (cursor.moveToNext()){
-//
-//                        b_work = cursor.getInt(3) ;}
-//                }
-//                else
-//                    b_work = 0;
-////                if(cursor.getColumnCount()>0){
-////                    tv1 = (TextView) view.findViewById(R.id.tv1);
-////        //            TextView tv1 = new TextView(container.getContext());
-////                    tv1.setText(cursor.getString(0));
-////
-////                }
 
-//
                 db.close();
 
                 progress1.setProgress(b_work*10);
