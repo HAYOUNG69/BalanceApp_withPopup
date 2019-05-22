@@ -43,6 +43,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                 "date TEXT,"+ "week TEXT,"+ "sleep REAL,"+"work REAL,"+"study REAL,"+"exercise REAL,"+"leisure REAL,"+"other REAL,"+"recommend TEXT);";
         db.execSQL(daySQL);
+
+        //현재 측정 테이블
+        String todaySQL = "CREATE TABLE tb_todaycount "+
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                "place TEXT,"+ "category TEXT,"+ "starttime TEXT,"+"endtime TEXT,"+"week TEXT);";
+        db.execSQL(todaySQL);
     }
 
     @Override
@@ -51,6 +57,8 @@ public class DBHelper extends SQLiteOpenHelper {
             db.execSQL("drop table if exists tb_goalbalance");
 
             db.execSQL("drop table if exists tb_dailybalance");
+
+            db.execSQL("drop table if exists tb_todaycount");
 
             onCreate(db);
         }

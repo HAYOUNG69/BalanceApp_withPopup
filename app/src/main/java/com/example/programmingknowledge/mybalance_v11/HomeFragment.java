@@ -1,6 +1,8 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -19,6 +21,7 @@ import android.widget.ListView;
 
 import org.qap.ctimelineview.TimelineRow;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +44,7 @@ public class HomeFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_home,container,false);
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
-        final DBHelper helper = new DBHelper(getContext());
+        final DBHelper helper = new DBHelper(container.getContext());
 
         button = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
@@ -58,19 +61,18 @@ public class HomeFragment extends Fragment {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setData(helper);
+                setData(v, helper);
             }
         });
 
-
-        // Add to the List
-        timelineRowsList.add(createTimelineRow(0));
-
+        //db 데이터 불러오기
+        putData(view, helper);
 
         // Create the Timeline Adapter
         myAdapter = new TimelineViewAdapter(getActivity(), 0, timelineRowsList,
                 //if true, list will be sorted by date
                 false);
+
 
         // Get the ListView and Bind it with the Timeline Adapter
         ListView myListView = (ListView) view.findViewById(R.id.timeline_listView);
@@ -98,22 +100,49 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private TimelineRow createTimelineRow(int id) {
+    private TimelineRow createTimelineRow(int id, String place, String category, String starttime) {
+        //카테고리 이미지 분류
+        int categoryNum;
+        switch (category) {
+            case "수면":
+                categoryNum = 0;
+                break;
+            case "일":
+                categoryNum = 1;
+                break;
+            case "공부":
+                categoryNum = 2;
+                break;
+            case "운동":
+                categoryNum = 3;
+                break;
+            case "여가":
+                categoryNum = 4;
+                break;
+            default:
+                categoryNum = 5;
+        }
 
-        //SimpleDateFormat sdfformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //Date date = sdfformat.parse("");
+        //날짜 String -> Date
+        SimpleDateFormat sdfformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdfformat.parse(starttime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         // Create new timeline row (pass your Id)
         TimelineRow myRow = new TimelineRow(id);
 
-        // To set the row Date (optional)
-        myRow.setDate(new Date());
-        // To set the row Title (optional)
-        myRow.setTitle("Work");
-        // To set the row Description (optional)
-        myRow.setDescription("starbucks");
-        // To set the row bitmap image (optional)
-        myRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.work));
+        // 날짜설정
+        myRow.setDate(date);
+        // 카테고리 설정
+        myRow.setTitle(category);
+        // 장소 설정
+        myRow.setDescription(place);
+        // 이미지 설정
+        myRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.category_0 + categoryNum));
         // To set row Below Line Color (optional)
         myRow.setBellowLineColor(Color.argb(255, 0, 0, 0));
         // To set row Below Line Size in dp (optional)
@@ -136,10 +165,32 @@ public class HomeFragment extends Fragment {
 
 
     //DB에 데이터 넣기
-    private void setData(DBHelper helper) {
+    private void setData(View v, DBHelper helper) {
                 SQLiteDatabase db = helper.getWritableDatabase();
-                db.execSQL("insert into todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
-                        new String[]{"우리집", "home", "2019-05-21 11:37:11", "2019-05-21 18:37:11", "수"});
+                //db.execSQL("delete from tb_todaycount");
+                db.execSQL("insert into tb_todaycount (place, category, starttime, endtime, week) values (?,?,?,?,?)",
+                        new String[]{"MONO CHEESE", "공부", "2019-05-22 17:00:41", "2019-05-22 20:30:19", "수"});
                 db.close();
     }
+
+    //DB에서 데이터 불러오기
+    private void putData(View v, DBHelper helper) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from tb_todaycount",null);
+        int i = 0;
+
+        if(cursor.getCount()==0) return;
+
+        while(cursor.moveToNext()) {
+            String place = cursor.getString(cursor.getColumnIndex("place"));
+            String category = cursor.getString(cursor.getColumnIndex("category"));
+            String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
+
+            timelineRowsList.add(createTimelineRow(i, place, category, starttime));
+            i++;
+        }
+
+        db.close();
+    }
+
 }
