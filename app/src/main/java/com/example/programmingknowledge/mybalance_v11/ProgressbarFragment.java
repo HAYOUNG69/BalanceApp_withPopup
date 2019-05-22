@@ -1,5 +1,6 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -114,30 +115,73 @@ public class ProgressbarFragment extends Fragment {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int g_work, b_work=0;
-
 
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                Cursor cursor = db.rawQuery("select work from tb_dailybalance where week='화' ",null);
+                Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='월' ",null);
+                Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='월' ",null);
 
-                if(cursor!=null && cursor.getCount() > 0)
-                {
-                    if (cursor.moveToFirst())
-                    {
-                        do {
-                            b_work = cursor.getInt(0);
-                        } while (cursor.moveToNext());
+                int[] goal = new int[5];
+                int[] measured = new int[5];
+
+                if(cursor1.getCount()==0 || cursor2.getCount()==0){
+                    showMessage("Error","Nothing found");
+                    return;
+                }
+                while(cursor1.moveToNext()){
+                    goal[0] = cursor1.getInt(cursor1.getColumnIndex("sleep"));
+                    goal[1] = cursor1.getInt(cursor1.getColumnIndex("work"));
+                    goal[2] = cursor1.getInt(cursor1.getColumnIndex("study"));
+                    goal[3] = cursor1.getInt(cursor1.getColumnIndex("exercise"));
+                    goal[4] = cursor1.getInt(cursor1.getColumnIndex("leisure"));
+
+                    for(int i=0;i<4;i++){
+                        if(goal[i]==0){
+                            goal[i]=1;
+                        }
                     }
                 }
 
+                while(cursor2.moveToNext()){
+                    measured[0] = cursor2.getInt(cursor2.getColumnIndex("sleep"));
+                    measured[1] = cursor2.getInt(cursor2.getColumnIndex("work"));
+                    measured[2] = cursor2.getInt(cursor2.getColumnIndex("study"));
+                    measured[3] = cursor2.getInt(cursor2.getColumnIndex("exercise"));
+                    measured[4] = cursor2.getInt(cursor2.getColumnIndex("leisure"));
+
+                    //나누는값이 0 이 안되게
+
+                }
+
+                //buffer이용 => string에서 하면 좋을듯
+//                StringBuffer buffer = new StringBuffer();
+//                while(cursor.moveToNext()){
+//                    buffer.append(cursor.getInt(cursor.getColumnIndex("sleep"))+"\n");
+//                    buffer.append(cursor.getInt(cursor.getColumnIndex("work"))+"\n");
+//                    buffer.append(cursor.getInt(cursor.getColumnIndex("study"))+"\n");
+//                    buffer.append(cursor.getInt(cursor.getColumnIndex("exercise"))+"\n");
+//                    buffer.append(cursor.getInt(cursor.getColumnIndex("leisure"))+"\n");
+//                }
+//                showMessage("Data",buffer.toString());
+
+                //데이터 1개 처리시
+//                if(cursor!=null && cursor.getCount() > 0)
+//                {
+//                    if (cursor.moveToFirst())
+//                    {
+//                        do {
+//                            b_work = cursor.getInt(0);
+//                        } while (cursor.moveToNext());
+//                    }
+//                }
+
                 db.close();
 
-                progress1.setProgress(50);
-                progress2.setProgress(50);
-                progress3.setProgress(50);
-                progress4.setProgress(50);
-                progress5.setProgress(50);
+                progress1.setProgress(measured[0]/goal[0]*100);
+                progress2.setProgress(measured[1]/goal[1]*100);
+                progress3.setProgress(measured[2]/goal[2]*100);
+                progress4.setProgress(measured[3]/goal[3]*100);
+                progress5.setProgress(measured[4]/goal[4]*100);
             }
         });
         return view;
@@ -174,10 +218,18 @@ public class ProgressbarFragment extends Fragment {
         //db 추가하기
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('05-13','월',1,2,2,3,3,4,'수면 부족')");
+        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-14','화',2,1,2,1,2,0,'운동 부족')");
         db.close();
 
 
+    }
+
+    public void showMessage(String title, String Message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(Message);
+        builder.show();
     }
 
 

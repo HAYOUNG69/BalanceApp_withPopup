@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" addBOMForNewFiles="with NO BOM" />
+  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$USER_HOME$/Documents/AndroidStudio/DeviceExplorer/Nexus_5_API_25 [emulator-5554]/data/data/com.example.programmingknowledge.mybalance_v11/databases/goalbalancedb" charset="IBM00858" />
+  </component>
 </project>
