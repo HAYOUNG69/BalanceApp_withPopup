@@ -121,23 +121,25 @@ public class ProgressbarFragment extends Fragment {
 
                 SQLiteDatabase db = helper.getWritableDatabase();
 
-                Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='월' ", null);
-                Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='월' ", null);
+                Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='토' ", null);
+                Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='토' ", null);
 
-                int[] goal = new int[5];
-                int[] measured = new int[5];
+                float[] goal = new float[5];
+                float[] measured = new float[5];
+                float[] result = new float[5];
 
                 if (cursor1.getCount() == 0 || cursor2.getCount() == 0) {
                     showMessage("Error", "Nothing found");
                     return;
                 }
                 while (cursor1.moveToNext()) {
-                    goal[0] = cursor1.getInt(cursor1.getColumnIndex("sleep"));
-                    goal[1] = cursor1.getInt(cursor1.getColumnIndex("work"));
-                    goal[2] = cursor1.getInt(cursor1.getColumnIndex("study"));
-                    goal[3] = cursor1.getInt(cursor1.getColumnIndex("exercise"));
-                    goal[4] = cursor1.getInt(cursor1.getColumnIndex("leisure"));
+                    goal[0] = cursor1.getFloat(cursor1.getColumnIndex("sleep"));
+                    goal[1] = cursor1.getFloat(cursor1.getColumnIndex("work"));
+                    goal[2] = cursor1.getFloat(cursor1.getColumnIndex("study"));
+                    goal[3] = cursor1.getFloat(cursor1.getColumnIndex("exercise"));
+                    goal[4] = cursor1.getFloat(cursor1.getColumnIndex("leisure"));
 
+                    //나누는값이 0 이 안되게
                     for (int i = 0; i < 4; i++) {
                         if (goal[i] == 0) {
                             goal[i] = 1;
@@ -146,13 +148,13 @@ public class ProgressbarFragment extends Fragment {
                 }
 
                 while (cursor2.moveToNext()) {
-                    measured[0] = cursor2.getInt(cursor2.getColumnIndex("sleep"));
-                    measured[1] = cursor2.getInt(cursor2.getColumnIndex("work"));
-                    measured[2] = cursor2.getInt(cursor2.getColumnIndex("study"));
-                    measured[3] = cursor2.getInt(cursor2.getColumnIndex("exercise"));
-                    measured[4] = cursor2.getInt(cursor2.getColumnIndex("leisure"));
+                    measured[0] = cursor2.getFloat(cursor2.getColumnIndex("sleep"));
+                    measured[1] = cursor2.getFloat(cursor2.getColumnIndex("work"));
+                    measured[2] = cursor2.getFloat(cursor2.getColumnIndex("study"));
+                    measured[3] = cursor2.getFloat(cursor2.getColumnIndex("exercise"));
+                    measured[4] = cursor2.getFloat(cursor2.getColumnIndex("leisure"));
 
-                    //나누는값이 0 이 안되게
+
 
                 }
 
@@ -180,22 +182,30 @@ public class ProgressbarFragment extends Fragment {
 
                 db.close();
 
-                progress1.setProgress(measured[0] / goal[0] * 100);
-                progress2.setProgress(measured[1] / goal[1] * 100);
-                progress3.setProgress(measured[2] / goal[2] * 100);
-                progress4.setProgress(measured[3] / goal[3] * 100);
-                progress5.setProgress(measured[4] / goal[4] * 100);
+
+
+                result[0] = measured[0] / goal[0] * 100;
+                result[1] = measured[1] / goal[1] * 100;
+                result[2] = measured[2] / goal[2] * 100;
+                result[3] = measured[3] / goal[3] * 100;
+                result[4] = measured[4] / goal[4] * 100;
 
                 textView8 = (TextView) view.findViewById(R.id.textView8);
-                textView8.setText("" + progress1.getProgress());
+                textView8.setText("" + result[0]);
                 textView9 = (TextView) view.findViewById(R.id.textView9);
-                textView9.setText("" + progress2.getProgress());
+                textView9.setText("" + result[1]);
                 textView10 = (TextView) view.findViewById(R.id.textView10);
-                textView10.setText("" + progress3.getProgress());
+                textView10.setText("" + result[2]);
                 textView11 = (TextView) view.findViewById(R.id.textView11);
-                textView11.setText("" + progress4.getProgress());
+                textView11.setText("" + result[3]);
                 textView12 = (TextView) view.findViewById(R.id.textView12);
-                textView12.setText("" + progress5.getProgress());
+                textView12.setText("" + result[4]);
+
+                progress1.setProgress(result[0]);
+                progress2.setProgress(result[1]);
+                progress3.setProgress(result[2]);
+                progress4.setProgress(result[3]);
+                progress5.setProgress(result[4]);
 
             }
         });
@@ -232,7 +242,7 @@ public class ProgressbarFragment extends Fragment {
         //db 추가하기
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-14','월',2,1,2,1,2,0,'운동 부족')");
+        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-14','토',0,1,2,4,8,0,'운동 부족')");
         db.close();
 
 

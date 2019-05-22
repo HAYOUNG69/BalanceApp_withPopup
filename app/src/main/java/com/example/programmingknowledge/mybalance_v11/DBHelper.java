@@ -12,22 +12,11 @@ import java.util.Date;
 //혜린's DBHelper ^_^
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
-
-//    public static final String COL_1 = "ID";
-//    public static final String COL_2 = "date";
-//    public static final String COL_3 = "sleep";
-//    public static final String COL_4 = "work";
-//    public static final String COL_5 = "study";
-//    public static final String COL_6 = "exercise";
-//    public static final String COL_7 = "leisure";
-//    public static final String COL_8 = "other";
-//    public static final String COL_9 = "recommend";
-
-
+    public static final int DATABASE_VERSION = 2;
 
     public DBHelper(Context context){
         super(context, "goalbalancedb", null, DATABASE_VERSION);
+
     }
 
     @Override

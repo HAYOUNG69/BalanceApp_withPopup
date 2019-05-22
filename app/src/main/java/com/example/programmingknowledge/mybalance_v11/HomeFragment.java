@@ -46,6 +46,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         final DBHelper helper = new DBHelper(container.getContext());
 
+
         button = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
         //setFrag(0);

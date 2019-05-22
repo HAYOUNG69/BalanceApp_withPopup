@@ -32,16 +32,16 @@ public class SettingsFragment extends Fragment {
                     fragmentTransaction.commit();
                 }
             });
-
-            TextView tv2 = (TextView)root.findViewById(R.id.GoToMap);
-            tv2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), GoogleMapActivity.class);
-
-                    startActivity(intent);
-                }
-            });
+//
+//           // TextView tv2 = (TextView)root.findViewById(R.id.GoToMap);
+//           //tv2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getContext(), GoogleMapActivity.class);
+//
+//                    startActivity(intent);
+//                }
+//            });
 
             return root;
     }
