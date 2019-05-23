@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.example.programmingknowledge.mybalance_v11.DBHelper;
 import com.example.programmingknowledge.mybalance_v11.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -95,6 +97,7 @@ public class GoogleMapActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -555,10 +558,11 @@ public class GoogleMapActivity extends AppCompatActivity
                     SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     String formatDate = sdfNow.format(date);
 
+                    /*
                     System.out.println(num + "::");
                     for (String s : placeType) {
                         System.out.println(s);
-                    }
+                    }*/
 
                     distance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);  //latLng는 검색된 place위치(내 위치와 가장 가까운 거리 구해야 됨)어떻게???
                     //미터로 반환
@@ -584,21 +588,26 @@ public class GoogleMapActivity extends AppCompatActivity
                         }
                     });*/
 
-                    /*mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
+                    mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {   //마커를 클릭하고 나오는 정보창을 클릭하면
-                            Intent intent = new Intent(getBaseContext(), NewActivity.class);
-
                             String title = marker.getTitle();
                             String type = marker.getSnippet();
+                            /*Intent intent = new Intent(getBaseContext(), NewActivity.class);
 
                             intent.putExtra("title", title);
                             intent.putExtra("type", type);
 
-                            startActivity(intent);
+                            startActivity(intent);*/
+
+                            DBHelper helper = new DBHelper(getApplicationContext());
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                                    new String[]{"2019-05-23", title, type, "15:15:16"});
+                            db.close();
                         }
-                    });*/
+                    });
                     /////////////////////////////////
 
                     Marker item = mGoogleMap.addMarker(markerOptions);
@@ -633,16 +642,19 @@ public class GoogleMapActivity extends AppCompatActivity
                     @Override
                     public void onItemClick(AdapterView parent, View v, int position, long id) {   //리스트를 눌렀을 때  //여기서 DB로 저장할까?? //아님 Parcelable 사용
                         // get TextView's Text.
-                        String strText = (String) parent.getItemAtPosition(position);
-                        Intent intent = new Intent(getBaseContext(), NewActivity.class);   //newactivity로 값 넘기기
+                        /*tString strText = (String) parent.getItemAtPosition(position);
+                        Intent intent = new Intent(getBaseContext(), HomeFragment.class);   //newactivity로 값 넘기기
 
-                        System.out.println("position: " + position + "번째//strText: " + strText);
+                        System.out.prinln("position: " + position + "번째//strText: " + strText);
 
                         intent.putExtra("title", strText);
                         intent.putExtra("address", strText);
+
+                        //setData(help);
+
                         //db에 저장장장장장..?
 
-                        startActivity(intent);
+                        //startActivity(intent);
                     }
                 });*/
             }
@@ -663,7 +675,7 @@ public class GoogleMapActivity extends AppCompatActivity
                 .listener(GoogleMapActivity.this)
                 .key("AIzaSyBzMQMBkCT4TIyu5zpqVDxWUu9yAvlJE-k")
                 .latlng(location.latitude, location.longitude)  //현재 위치
-                .radius(30) //50 미터 내에서 검색
+                .radius(350) //50 미터 내에서 검색
                 //.type(PlaceType.BUS_STATION)  //모든 타입을 검색하면 시청이 검색 됨..흐규흐규...
                 .build()
                 .execute();
@@ -675,3 +687,4 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 
 }
+
