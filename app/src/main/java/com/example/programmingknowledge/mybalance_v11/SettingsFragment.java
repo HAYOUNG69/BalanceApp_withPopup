@@ -1,5 +1,6 @@
 package com.example.programmingknowledge.mybalance_v11;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,16 +33,15 @@ public class SettingsFragment extends Fragment {
                     fragmentTransaction.commit();
                 }
             });
-//
-//           // TextView tv2 = (TextView)root.findViewById(R.id.GoToMap);
-//           //tv2.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getContext(), GoogleMapActivity.class);
-//
-//                    startActivity(intent);
-//                }
-//            });
+
+            TextView tv2 = (TextView)root.findViewById(R.id.GoToMap);
+            tv2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), GoogleMapActivity.class);   //newactivity로 값 넘기기
+                    startActivity(intent);
+                }
+            });   //google map activity 실행하기
 
             return root;
     }

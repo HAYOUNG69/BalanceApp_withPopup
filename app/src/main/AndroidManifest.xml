@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.example.GoogleMapAPI.GoogleMapActivity"/> <!--추가-->
 
     </application>
 
