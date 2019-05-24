@@ -1,0 +1,208 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto">
+
+    <info.hoang8f.android.segmented.SegmentedGroup
+        android:id="@+id/segmented2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        segmentedgroup:sc_border_width="1dp"
+        segmentedgroup:sc_corner_radius="10dp"
+        segmentedgroup:sc_tint_color="#00574B"
+        segmentedgroup:sc_checked_text_color="#FFFFFF">
+
+        <RadioButton
+            android:id="@+id/button21"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="월별"
+            style="@style/RadioButton" />
+
+        <RadioButton
+            android:id="@+id/button22"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="주별"
+            style="@style/RadioButton" />
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <TextView
+        android:id="@+id/nthweek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/segmented2"
+        android:layout_centerHorizontal="true"
+        android:textSize="23dp"
+        android:text="5월 4주차" />
+
+    <lecho.lib.hellocharts.view.ColumnChartView
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="324dp"
+        android:layout_below="@+id/nthweek"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"></lecho.lib.hellocharts.view.ColumnChartView>
+
+    <TextView
+        android:id="@+id/averageNotice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chart"
+        android:textSize="20dp"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="이주의 평균 소비시간" />
+
+    <RelativeLayout
+        android:id="@+id/averageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/averageNotice"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="50dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sleepAverage"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="0dp"
+            android:text="잠"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/sleepAverageValue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/sleepAverage"
+            android:text="05:02:52"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/workAverage"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/sleepAverage"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:text="일"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/workAverageValue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/sleepAverageValue"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/workAverage"
+            android:text="05:02:52"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/studyAverage"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/workAverage"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:text="공부"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/studyAverageValue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/workAverageValue"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/studyAverage"
+            android:text="05:02:52"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/exerciseAverage"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@id/sleepAverageValue"
+            android:text="운동"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/exerciseAverageValue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/exerciseAverage"
+            android:text="05:02:52"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/leisureAverage"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/exerciseAverage"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@id/sleepAverageValue"
+            android:text="여가"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/leisureAverageValue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/exerciseAverageValue"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/leisureAverage"
+            android:text="05:02:52"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/othersAverage"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/leisureAverage"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@id/sleepAverageValue"
+            android:text="기타"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/othersAverageValue"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/leisureAverageValue"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/othersAverage"
+            android:text="05:02:52"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

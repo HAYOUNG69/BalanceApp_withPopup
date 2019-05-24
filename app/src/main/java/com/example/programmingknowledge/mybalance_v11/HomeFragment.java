@@ -174,7 +174,7 @@ public class HomeFragment extends Fragment {
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
                 new String[]{"2019-05-22", "경기대학교", "공부", "09:05:00", "11:55:12"});
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019-05-23", "헬스장", "운동", "07:27:35", "08:46:33"});
+                new String[]{"2019-05-23", "헬스장", "운동", "15:27:35", "18:46:33"});
         db.close();
     }
 

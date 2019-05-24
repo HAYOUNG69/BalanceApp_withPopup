@@ -1,16 +1,8 @@
 package com.example.programmingknowledge.mybalance_v11;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
-public class FavoritesFragment extends Fragment {
+public class StatisticsFragment extends Fragment {
     /*public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_column_chart,container,false);
     }
@@ -36,21 +28,22 @@ public class FavoritesFragment extends Fragment {
         private ColumnChartData data;
         private boolean hasAxes = true;
         private boolean hasAxesNames = true;
-        private boolean hasLabels = false;
-        private boolean hasLabelForSelected = false;
+        private boolean hasLabels = true;
+        private boolean hasLabelForSelected = true;
         private int dataType = DEFAULT_DATA;
 
 
-        public FavoritesFragment() {
+        public StatisticsFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             setHasOptionsMenu(true);
-            View rootView = inflater.inflate(R.layout.fragment_column_chart, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_statistics, container, false);
 
             chart = (ColumnChartView) rootView.findViewById(R.id.chart);
-            //chart.setOnValueTouchListener(new ValueTouchListener());   //차트를 선택했을때 값이 팝업으로 뜨는 함수
+            //fragment_statistics.setOnValueTouchListener(new ValueTouchListener());   //차트를 선택했을때 값이 팝업으로 뜨는 함수
+            chart.setZoomEnabled(false);
 
             generateStackedData();
 
@@ -58,22 +51,30 @@ public class FavoritesFragment extends Fragment {
         }
 
     private void generateStackedData() {
-        int numSubcolumns = 4;  //스택의 개수
-        int numColumns = 7;   //일주일(7일) 그래프
-        // Column can have many stacked subcolumns, here I use 4 stacke subcolumn in each of 4 columns.
+        int categoryNum = 5;   //스택의 개수
+        int dayNum = 7;   //일주일(7일) 그래프
+        // Column can have many stacked subcolumns, here I use 4 stack subcolumn in each of 4 columns.
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
-        for (int i = 0; i < numColumns; ++i) {
+        List<AxisValue> axisValues = new ArrayList<AxisValue>();    //'월화수목금토일' 표시 그래프에 뜨게
+        String[] months = new String[]{"월","화","수","목","금","토","일"};
+        for (int i = 0; i < dayNum; ++i) {
             values = new ArrayList<SubcolumnValue>();
-            for (int j = 0; j < numSubcolumns; ++j) {
-                values.add(new SubcolumnValue(7/*(float) Math.random() * 20f + 5*/, ChartUtils.pickColor()));   //값 넣기
-            }
+                values.add(new SubcolumnValue(8, getResources().getColor(R.color.sleep)));
+                values.add(new SubcolumnValue(8, getResources().getColor(R.color.work)));
+                values.add(new SubcolumnValue(3, getResources().getColor(R.color.study)));
+                values.add(new SubcolumnValue(2, getResources().getColor(R.color.exercise)));
+                values.add(new SubcolumnValue(2, getResources().getColor(R.color.leisure)));
+                values.add(new SubcolumnValue(1, getResources().getColor(R.color.lightGray)));
 
             Column column = new Column(values);
-            column.setHasLabels(hasLabels);
-            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            //column.setHasLabels(hasLabels);
+            //column.setHasLabelsOnlyForSelected(hasLabelForSelected);
             columns.add(column);
+
+            axisValues.add(i, new AxisValue(i).setLabel(months[i]));
         }
+
 
         data = new ColumnChartData(columns);
 
@@ -83,10 +84,12 @@ public class FavoritesFragment extends Fragment {
         if (hasAxes) {
             Axis axisX = new Axis();
             Axis axisY = new Axis().setHasLines(true);
-            if (hasAxesNames) {
-                axisX.setName("Axis X");
-                axisY.setName("Axis Y");
-            }
+
+            axisX.setValues(axisValues);
+
+            axisX.setTextColor(Color.BLACK);
+            axisY.setTextColor(Color.BLACK);
+
             data.setAxisXBottom(axisX);
             data.setAxisYLeft(axisY);
         } else {
