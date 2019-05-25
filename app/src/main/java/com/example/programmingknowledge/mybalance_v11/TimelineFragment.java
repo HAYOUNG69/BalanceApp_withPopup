@@ -64,7 +64,6 @@ public class TimelineFragment extends Fragment {
         //위에 날짜 띄우기
         dateNow = (TextView)view.findViewById(R.id.nowDate);
         String date = mParam1.substring(5);
-        System.out.println(date);
         if (date.equals(new SimpleDateFormat("MM/dd").format(new Date())))
             dateNow.setText("오늘");
         else
@@ -162,7 +161,6 @@ public class TimelineFragment extends Fragment {
     //DB에서 데이터 불러오기
     private void putData(View v, DBHelper helper) {
         String date = mParam1;
-        System.out.println(date);
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from tb_timeline where date=?",
                 new String[]{date});
@@ -174,7 +172,6 @@ public class TimelineFragment extends Fragment {
             String place = cursor.getString(cursor.getColumnIndex("place"));
             String category = cursor.getString(cursor.getColumnIndex("category"));
             String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
-            System.out.println(place);
 
             timelineRowsList.add(createTimelineRow(i, place, category, starttime));
             i++;
