@@ -71,24 +71,31 @@ public class TimelineFragment extends Fragment {
     private TimelineRow createTimelineRow(int id, String place, String category, String starttime) {
         //카테고리 이미지 분류
         int categoryNum;
+        String color;
         switch (category) {
             case "수면":
                 categoryNum = 0;
+                color = "#414766";
                 break;
             case "일":
                 categoryNum = 1;
+                color = "#F98583";
                 break;
             case "공부":
                 categoryNum = 2;
+                color = "#B4CC65";
                 break;
             case "운동":
                 categoryNum = 3;
+                color = "#FBB06D";
                 break;
             case "여가":
                 categoryNum = 4;
+                color = "#C7ACEE";
                 break;
             default:
                 categoryNum = 5;
+                color = "#888888";
         }
 
         //날짜 String -> Date
@@ -112,13 +119,13 @@ public class TimelineFragment extends Fragment {
         // 이미지 설정
         myRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.category_0 + categoryNum));
         // To set row Below Line Color (optional)
-        myRow.setBellowLineColor(Color.argb(255, 0, 0, 0));
+        myRow.setBellowLineColor(Color.parseColor(color));
         // To set row Below Line Size in dp (optional)
         myRow.setBellowLineSize(6);
         // To set row Image Size in dp (optional)
         myRow.setImageSize(30);
         // To set background color of the row image (optional)
-        myRow.setBackgroundColor(Color.argb(255, 170, 170, 170));
+        myRow.setBackgroundColor(Color.parseColor(color));
         // To set the Background Size of the row image in dp (optional)
         myRow.setBackgroundSize(60);
         // To set row Date text color (optional)

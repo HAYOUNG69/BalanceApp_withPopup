@@ -38,13 +38,14 @@ public class HomeFragment extends Fragment {
         Cursor cursor = db.rawQuery("select count(distinct date) from tb_timeline",null);
         cursor.moveToFirst();
         page = cursor.getInt(0);
-        System.out.println(page);
 
         mViewPager = (ViewPager)view.findViewById(R.id.pager);
         HomeFragment.MyPagerAdapter adapter = new HomeFragment.MyPagerAdapter(getChildFragmentManager(), page);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(page - 1);
 
+
+        //progressbar로 전환
         button = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
         button.setOnClickListener(new View.OnClickListener() {
