@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.qap.ctimelineview.TimelineRow;
 
@@ -28,12 +29,29 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class TimelineFragment extends Fragment {
-
-    Button button2;
+    private static final String ARG_PARAM1 = "param1";
+    private String mParam1;
+    TextView dateNow;
 
     //Create Timeline Rows List
     private ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
     ArrayAdapter<TimelineRow> myAdapter;
+
+    public static TimelineFragment newInstance(String param1) {
+        TimelineFragment fragment = new TimelineFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+        }
+    }
 
     @Nullable
     @Override
@@ -43,15 +61,15 @@ public class TimelineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         final DBHelper helper = new DBHelper(container.getContext());
 
+        //위에 날짜 띄우기
+        dateNow = (TextView)view.findViewById(R.id.nowDate);
+        String date = mParam1.substring(5);
+        System.out.println(date);
+        if (date.equals(new SimpleDateFormat("MM/dd").format(new Date())))
+            dateNow.setText("오늘");
+        else
+            dateNow.setText(date);
 
-        //db insert 버튼
-        button2 = (Button)view.findViewById(R.id.insert);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setData(v, helper);
-            }
-        });
 
         //db 데이터 불러오기
         putData(view, helper);
@@ -139,23 +157,15 @@ public class TimelineFragment extends Fragment {
     }
 
 
-    //DB에 데이터 넣기
-    private void setData(View v, DBHelper helper) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        //db.execSQL("delete from tb_todaycount");
-        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019-05-21", "한강동아아파트", "수면", "01:15:16", "06:18:26"});
-        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019-05-22", "경기대학교", "공부", "09:05:00", "11:55:12"});
-        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019-05-23", "헬스장", "운동", "15:27:35", "18:46:33"});
-        db.close();
-    }
+
 
     //DB에서 데이터 불러오기
     private void putData(View v, DBHelper helper) {
+        String date = mParam1;
+        System.out.println(date);
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from tb_timeline",null);
+        Cursor cursor = db.rawQuery("select * from tb_timeline where date=?",
+                new String[]{date});
         int i = 0;
 
         if(cursor.getCount()==0) return;
@@ -164,6 +174,7 @@ public class TimelineFragment extends Fragment {
             String place = cursor.getString(cursor.getColumnIndex("place"));
             String category = cursor.getString(cursor.getColumnIndex("category"));
             String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
+            System.out.println(place);
 
             timelineRowsList.add(createTimelineRow(i, place, category, starttime));
             i++;

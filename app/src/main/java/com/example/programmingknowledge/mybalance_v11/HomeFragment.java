@@ -16,6 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class HomeFragment extends Fragment {
 
     private ViewPager mViewPager;
@@ -23,6 +28,7 @@ public class HomeFragment extends Fragment {
     FragmentTransaction tran;
     ProgressbarFragment frag1;
     Button button;
+    Button button2;
     int page;
 
     @Nullable
@@ -32,6 +38,14 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         final DBHelper helper = new DBHelper(container.getContext());
 
+        //db insert 버튼
+        button = (Button)view.findViewById(R.id.insert);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setData(v, helper);
+            }
+        });
 
         //페이지 갯수 세기
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -44,20 +58,30 @@ public class HomeFragment extends Fragment {
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(page - 1);
 
-
         //progressbar로 전환
-        button = (Button)view.findViewById(R.id.button);
+        button2 = (Button)view.findViewById(R.id.button);
         frag1 = new ProgressbarFragment();
-        button.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setFrag(0);
             }
         });
 
-
-
         return view;
+    }
+
+    //DB에 데이터 넣기
+    private void setData(View v, DBHelper helper) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //db.execSQL("delete from tb_timeline");
+        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
+                new String[]{"2019/05/22", "한강동아아파트", "수면", "01:15:16", "06:18:26"});
+        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
+                new String[]{"2019/05/23", "경기대학교", "공부", "09:05:00", "11:55:12"});
+        db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
+                new String[]{"2019/05/24", "헬스장", "운동", "15:27:35", "18:46:33"});
+        db.close();
     }
 
     public void setFrag(int n){
@@ -72,6 +96,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    //히스토리 pagerAdapter
     private  static class MyPagerAdapter extends FragmentStatePagerAdapter {
         int page;
 
@@ -80,11 +105,27 @@ public class HomeFragment extends Fragment {
             this.page = n;
         }
 
+        //타임라인 히스토리 페이지 설정
         @Override
         public Fragment getItem(int position) {
-            Fragment frag = new TimelineFragment();
+            Fragment frag;
+            Date date = new Date();
+            SimpleDateFormat sdfdate = new SimpleDateFormat("yyyy/MM/dd");
+            String formatDate = sdfdate.format(date);
 
-            return frag;
+            for (int i = 0; i < page; i++) {
+                if (position == i) {
+
+                    try {
+                        formatDate = subDate(formatDate, (i+1-page));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    frag = TimelineFragment.newInstance(formatDate);
+                    return frag;
+                }
+            }
+            return null;
         }
 
         @Override
@@ -92,5 +133,19 @@ public class HomeFragment extends Fragment {
             return page;
         }
     }
+
+    //날짜 빼는 메소드
+    private static String subDate(String dt, int d) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+
+        Calendar cal = Calendar.getInstance();
+        Date date = format.parse(dt);
+        cal.setTime(date);
+        cal.add(Calendar.DATE, d);
+
+        return format.format(cal.getTime());
+    }
+
+
 }
 
