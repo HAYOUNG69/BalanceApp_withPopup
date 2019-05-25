@@ -44,5 +44,5 @@ dependencies {
     implementation 'com.github.qapqap:TimelineView:v1.6' //추가(타임라인)
 
 
-    compile 'info.hoang8f:android-segmented:1.0.6'  //추가(주/월 선택)
+    implementation 'info.hoang8f:android-segmented:1.0.6'  //추가(주/월 선택)
 }
