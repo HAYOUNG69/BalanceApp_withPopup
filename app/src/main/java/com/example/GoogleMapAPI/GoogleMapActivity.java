@@ -555,8 +555,10 @@ public class GoogleMapActivity extends AppCompatActivity
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     // 시간을 나타냇 포맷을 정한다 ( yyyy/MM/dd 같은 형태로 변형 가능 )
-                    SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    String formatDate = sdfNow.format(date);
+                    SimpleDateFormat sdfdate = new SimpleDateFormat("yyyy/MM/dd");
+                    SimpleDateFormat sdftime = new SimpleDateFormat("HH:mm:ss");
+                    final String formatDate = sdfdate.format(date);
+                    final String formatTime = sdftime.format(date);
 
                     /*
                     System.out.println(num + "::");
@@ -604,7 +606,7 @@ public class GoogleMapActivity extends AppCompatActivity
                             DBHelper helper = new DBHelper(getApplicationContext());
                             SQLiteDatabase db = helper.getWritableDatabase();
                             db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
-                                    new String[]{"2019-05-23", title, type, "15:15:16"});
+                                    new String[]{formatDate, title, type, formatTime});
                             db.close();
                         }
                     });

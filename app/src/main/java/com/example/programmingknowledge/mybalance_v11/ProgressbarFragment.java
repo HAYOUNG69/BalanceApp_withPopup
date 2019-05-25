@@ -339,22 +339,9 @@ public class ProgressbarFragment extends Fragment {
                     }
                 });
                 break;
-
-
-        }
-
-
-
-    }
-
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button2:
-                setFrag(1);
-                break;
         }
     }
+
 
     public void setFrag(int n) {
         fm = getFragmentManager();
@@ -375,8 +362,6 @@ public class ProgressbarFragment extends Fragment {
 
         db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-14','토',0,1,2,4,8,0,'운동 부족')");
         db.close();
-
-
     }
 
     public void showMessage(String title, String Message) {

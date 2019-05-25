@@ -145,7 +145,7 @@ public class TimelineViewAdapter extends ArrayAdapter<TimelineRow> {
         for (int i = 0; i < size - 1; i++) {
             for (int j = i + 1; j < size; j++) {
                 if(objects.get(i).getDate()!= null && objects.get(j).getDate() != null)
-                    if (objects.get(i).getDate().compareTo(objects.get(j).getDate()) <= 0)
+                    if (objects.get(i).getDate().compareTo(objects.get(j).getDate()) >= 0)
                         Collections.swap(objects, i, j);
             }
 
