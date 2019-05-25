@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_favorites"
+        android:id="@+id/nav_statistics"
         android:icon="@drawable/statistics"
         android:title="Statistics" />
 
@@ -12,7 +12,7 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/nav_search"
+        android:id="@+id/nav_settings"
         android:icon="@drawable/settings"
         android:title="Settings" />
 

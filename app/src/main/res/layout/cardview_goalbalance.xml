@@ -37,7 +37,7 @@
             android:id="@+id/sleep"
             android:layout_width="320px"
             android:layout_height="wrap_content"
-            android:background="#414766"
+            android:background="@color/sleep"
             android:visibility="visible" />
 
         <View
@@ -46,21 +46,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_toRightOf="@id/sleep"
-            android:background="#F98583" />
+            android:background="@color/work" />
 
         <View
             android:id="@+id/study"
             android:layout_width="120px"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/work"
-            android:background="#B4CC65" />
+            android:background="@color/study" />
 
         <View
             android:id="@+id/exercise"
             android:layout_width="80px"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/study"
-            android:background="#FBB06D" />
+            android:background="@color/exercise" />
 
         <View
             android:id="@+id/leisure"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_toRightOf="@id/exercise"
-            android:background="#C7ACEE" />
+            android:background="@color/leisure" />
 
     </LinearLayout>
 

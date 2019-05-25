@@ -42,4 +42,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.qapqap:TimelineView:v1.6' //추가(타임라인)
+
+
+    compile 'info.hoang8f:android-segmented:1.0.6'  //추가(주/월 선택)
 }

@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_home:
                             selectedFragment = new HomeFragment();
                             break;
-                        case R.id.nav_favorites:
-                            selectedFragment = new FavoritesFragment();
+                        case R.id.nav_statistics:
+                            selectedFragment = new StatisticsFragment();
                             break;
-                        case R.id.nav_search:
+                        case R.id.nav_settings:
                             selectedFragment = new SettingsFragment();
                             break;
 
