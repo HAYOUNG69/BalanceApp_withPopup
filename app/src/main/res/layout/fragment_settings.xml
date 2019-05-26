@@ -34,4 +34,44 @@
         android:text="지도"
         android:textSize="25dp" />
 
+    <TextView
+        android:id="@+id/text_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="212dp"
+        android:layout_marginLeft="212dp"
+        android:layout_marginTop="205dp"
+
+        android:text="popup 창에서 데이터 받아오기"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/btn_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="지도popup"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginLeft="212dp"
+        android:layout_marginTop="205dp"
+        android:clickable="true"
+        android:textSize="25dp"/>
+
+    <Button
+        android:id="@+id/btn_noti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginLeft="212dp"
+        android:layout_marginTop="280dp"
+        android:text="Notification" />
+
 </RelativeLayout>
