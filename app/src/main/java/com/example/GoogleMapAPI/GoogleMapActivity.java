@@ -90,7 +90,7 @@ public class GoogleMapActivity extends AppCompatActivity
     private AppCompatActivity mActivity;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
-    // Location mCurrentLocatiion;
+     Location mCurrentLocatiion;
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
@@ -109,6 +109,7 @@ public class GoogleMapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         //popup으로 보이게 윈도우스타일 변경
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -117,12 +118,12 @@ public class GoogleMapActivity extends AppCompatActivity
 //        setContentView(R.layout.activity_googlemap);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.fragment_settings);
+        setContentView(R.layout.activity_googlemap);
 
         Dialog dialog = new Dialog(this);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.activity_googlemap);
+        dialog.getCurrentFocus();
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
 
         params.width=850;
@@ -132,15 +133,17 @@ public class GoogleMapActivity extends AppCompatActivity
         //setContentView(dialog.getCurrentFocus());
 
 
+
         previous_marker = new ArrayList<Marker>();
 
-//        Button button = (Button) findViewById(R.id.button);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showPlaceInformation(currentPosition);
-//            }
-//        });
+
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPlaceInformation(currentPosition);
+            }
+        });
 
         Log.d(TAG, "onCreate");
         mActivity = this;
@@ -619,6 +622,8 @@ public class GoogleMapActivity extends AppCompatActivity
                 Collections.sort(mlist, comp);
                 //mlist에 저장된 객체들을 거리순으로 정렬
 
+
+
                 final ListView listView = (ListView) findViewById(R.id.listView);
                 ArrayList<HashMap<String, String>> MarkerList = new ArrayList<>();
                 SimpleAdapter simpleAdapter = new SimpleAdapter(GoogleMapActivity.this, MarkerList, android.R.layout.simple_list_item_2, new String[]{"place_name", "place_type"}, new int[]{android.R.id.text1, android.R.id.text2});
@@ -656,6 +661,11 @@ public class GoogleMapActivity extends AppCompatActivity
                         DBHelper helper = new DBHelper(getApplicationContext());
                         SQLiteDatabase db = helper.getWritableDatabase();
                         Cursor cursor = db.rawQuery("select * from tb_timeline where endtime is NULL", null);
+
+                        if (cursor.getCount() == 0 ) {
+                            showMessage("Error", "Nothing found");
+                            return;
+                        }
                         cursor.moveToFirst();
                         String place = cursor.getString(cursor.getColumnIndex("place"));
                         String category = cursor.getString(cursor.getColumnIndex("category"));
@@ -685,6 +695,14 @@ public class GoogleMapActivity extends AppCompatActivity
                 });
             }
         });
+    }
+
+    public void showMessage(String title, String Message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(Message);
+        builder.show();
     }
 
     @Override
