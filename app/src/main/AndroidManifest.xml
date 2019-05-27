@@ -13,10 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <activity android:name=".ResultActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBJqV4LdJbBOWM_WW0F4VIaCwnM9t8d4-o"/>
+            android:value="AIzaSyALr88wG8gkDB_iGiy6YhugN87euZgGIQA" />
 
         <activity
             android:name=".MainActivity"
@@ -27,9 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.example.GoogleMapAPI.GoogleMapActivity"/> <!--추가-->
-
+        <activity android:name="com.example.GoogleMapAPI.GoogleMapActivity" />
     </application>
 
 </manifest>

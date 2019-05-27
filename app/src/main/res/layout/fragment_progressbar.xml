@@ -59,8 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            />
+            android:layout_marginTop="5dp" />
 
     </LinearLayout>
 
@@ -76,7 +75,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="일" />
+            android:textColor="@android:color/black"
+            android:text=" 일 " />
 
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
@@ -91,8 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            />
+            android:layout_marginTop="5dp" />
 
     </LinearLayout>
 
@@ -108,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"
             android:text="공부" />
 
 
@@ -123,8 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            />
+            android:layout_marginTop="5dp" />
 
     </LinearLayout>
 
@@ -140,6 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"
             android:text="운동" />
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
@@ -155,8 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-             />
+            android:layout_marginTop="5dp" />
 
     </LinearLayout>
 
@@ -172,6 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"
             android:text="여가" />
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
@@ -196,7 +196,7 @@
     <LinearLayout
         android:id="@+id/linearlayout6"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/linearlayout5"
 
         android:layout_marginTop="6dp"
@@ -222,11 +222,12 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
 
 
     </LinearLayout>
+
+
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
