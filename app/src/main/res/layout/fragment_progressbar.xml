@@ -10,29 +10,37 @@
     android:scrollbarAlwaysDrawVerticalTrack="false"
     android:scrollbars="vertical">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/timeline" />
-
-    <TextView
-        android:id="@+id/text"
+    <LinearLayout
+        android:id="@+id/linearlayout6"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
         android:layout_marginTop="25dp"
-        android:text="오늘의 밸런스"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/today"
+            android:layout_width="wrap_content"
+            android:layout_height="62dp"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="62dp"
+            android:text=" 의 밸런스"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text"
+        android:layout_below="@id/linearlayout6"
         android:layout_centerHorizontal="false">
 
         <TextView
@@ -192,50 +200,23 @@
             tools:layout_editor_absoluteY="379dp" />
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/linearlayout6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linearlayout5"
-
-        android:layout_marginTop="6dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="datainsert" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearlayout5"
-
-            android:layout_toRightOf="@+id/btnAdd"
-            android:text="Balance" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-
-    </LinearLayout>
-
-
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linearlayout6"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
+        android:layout_below="@id/linearlayout5"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
         android:text="일이 많은 하루입니다!" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_below="@id/textView13"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1" />
 
 
 </RelativeLayout>

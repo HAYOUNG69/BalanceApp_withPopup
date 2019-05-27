@@ -23,49 +23,52 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 import org.w3c.dom.Text;
 
-public class ProgressbarFragment extends Fragment {
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+public class ProgressbarFragment extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
+    private String mParam1;
     FragmentManager fm;
     FragmentTransaction tran;
     HomeFragment frag2;
 
-    Button bt1;
-    Button button2;
-    Button btnAdd;
     View view;
     ImageView imageView;
+    TextView dateNow;
 
     TextView textView8, textView9, textView10, textView11, textView12;
+
+    public static ProgressbarFragment newInstance(String param1) {
+        ProgressbarFragment fragment = new ProgressbarFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, Bundle savedInstanceState) {
-        //DE
         final DBHelper helper = new DBHelper(container.getContext());
-
-
         view = inflater.inflate(R.layout.fragment_progressbar, container, false);
 
+        //위에 날짜 띄우기
+        dateNow = (TextView)view.findViewById(R.id.today);
+        String date = mParam1.substring(5);
+        if (date.equals(new SimpleDateFormat("MM/dd").format(new Date())))
+            dateNow.setText("오늘");
+        else
+            dateNow.setText(date);
 
-        bt1 = (Button) view.findViewById(R.id.button);
-        button2 = (Button) view.findViewById(R.id.button2);
-
-        btnAdd = (Button) view.findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setDailybalance(v, helper);
-            }
-        });
-
-        frag2 = new HomeFragment();
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFrag(1);
-            }
-
-        });
 
         final RoundCornerProgressBar progress1 = (RoundCornerProgressBar) view.findViewById(R.id.progressBar1);
         progress1.setProgressColor(Color.parseColor("#ff363636"));
@@ -114,103 +117,98 @@ public class ProgressbarFragment extends Fragment {
         int progressColor5 = progress5.getProgressColor();
         int backgroundColor5 = progress5.getProgressBackgroundColor();
 
-        bt1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        SQLiteDatabase db = helper.getWritableDatabase();
 
-                SQLiteDatabase db = helper.getWritableDatabase();
 
-                Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='토' ", null);
-                Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='토' ", null);
+        Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='토' ", null);
+        Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='토' ", null);
 
-                float[] goal = new float[5];
-                float[] measured = new float[5];
-                float[] result = new float[5];
+        float[] goal = new float[5];
+        float[] measured = new float[5];
+        float[] result = new float[5];
 
-                if (cursor1.getCount() == 0 || cursor2.getCount() == 0) {
-                    showMessage("Error", "Nothing found");
-                    return;
+        if (cursor1.getCount() == 0 || cursor2.getCount() == 0) {
+            showMessage("Error", "Nothing found");
+        }
+        while (cursor1.moveToNext()) {
+            goal[0] = cursor1.getFloat(cursor1.getColumnIndex("sleep"));
+            goal[1] = cursor1.getFloat(cursor1.getColumnIndex("work"));
+            goal[2] = cursor1.getFloat(cursor1.getColumnIndex("study"));
+            goal[3] = cursor1.getFloat(cursor1.getColumnIndex("exercise"));
+            goal[4] = cursor1.getFloat(cursor1.getColumnIndex("leisure"));
+
+            //나누는값이 0 이 안되게
+            for (int i = 0; i < 4; i++) {
+                if (goal[i] == 0) {
+                    goal[i] = 1;
                 }
-                while (cursor1.moveToNext()) {
-                    goal[0] = cursor1.getFloat(cursor1.getColumnIndex("sleep"));
-                    goal[1] = cursor1.getFloat(cursor1.getColumnIndex("work"));
-                    goal[2] = cursor1.getFloat(cursor1.getColumnIndex("study"));
-                    goal[3] = cursor1.getFloat(cursor1.getColumnIndex("exercise"));
-                    goal[4] = cursor1.getFloat(cursor1.getColumnIndex("leisure"));
-
-                    //나누는값이 0 이 안되게
-                    for (int i = 0; i < 4; i++) {
-                        if (goal[i] == 0) {
-                            goal[i] = 1;
-                        }
-                    }
-                }
-
-                while (cursor2.moveToNext()) {
-                    measured[0] = cursor2.getFloat(cursor2.getColumnIndex("sleep"));
-                    measured[1] = cursor2.getFloat(cursor2.getColumnIndex("work"));
-                    measured[2] = cursor2.getFloat(cursor2.getColumnIndex("study"));
-                    measured[3] = cursor2.getFloat(cursor2.getColumnIndex("exercise"));
-                    measured[4] = cursor2.getFloat(cursor2.getColumnIndex("leisure"));
-                }
-
-                db.close();
-
-                result[0] = measured[0] / goal[0] * 100;
-                result[1] = measured[1] / goal[1] * 100;
-                result[2] = measured[2] / goal[2] * 100;
-                result[3] = measured[3] / goal[3] * 100;
-                result[4] = measured[4] / goal[4] * 100;
-
-                //추천활동 정하기
-                float min = 0;
-                float max = 100;
-                int recommend_min = 0;
-                int recommend_max=0;
-                //recommend는 0~4 를 통해 카테고리 알려줌
-
-                for(int i=0;i<result.length;i++) {
-                    if(max<result[i]) {
-                        //max의 값보다 array[i]이 크면 max = array[i]
-                        max = result[i];
-                        recommend_max = i;
-                    }
-
-                    if(min>result[i]) {
-                        //min의 값보다 array[i]이 작으면 min = array[i]
-                        min = result[i];
-                        recommend_min = i;
-                    }
-
-
-                    //추천활동이 카테고리별 과잉(너무 많이 함)에 대한 결과일 경우 +5를 해준다.(setRecommend로 넘기기 쉽게)
-                    if(max-100 > 100-min)
-                        recommend_min = recommend_max+5;
-
-
-
-                }
-                setRecommend(recommend_min);
-
-
-                textView8 = (TextView) view.findViewById(R.id.textView8);
-                textView8.setText("" + result[0]);
-                textView9 = (TextView) view.findViewById(R.id.textView9);
-                textView9.setText("" + result[1]);
-                textView10 = (TextView) view.findViewById(R.id.textView10);
-                textView10.setText("" + result[2]);
-                textView11 = (TextView) view.findViewById(R.id.textView11);
-                textView11.setText("" + result[3]);
-                textView12 = (TextView) view.findViewById(R.id.textView12);
-                textView12.setText("" + result[4]);
-
-                progress1.setProgress(result[0]);
-                progress2.setProgress(result[1]);
-                progress3.setProgress(result[2]);
-                progress4.setProgress(result[3]);
-                progress5.setProgress(result[4]);
             }
-        });
+        }
+
+        while (cursor2.moveToNext()) {
+            measured[0] = cursor2.getFloat(cursor2.getColumnIndex("sleep"));
+            measured[1] = cursor2.getFloat(cursor2.getColumnIndex("work"));
+            measured[2] = cursor2.getFloat(cursor2.getColumnIndex("study"));
+            measured[3] = cursor2.getFloat(cursor2.getColumnIndex("exercise"));
+            measured[4] = cursor2.getFloat(cursor2.getColumnIndex("leisure"));
+        }
+
+        db.close();
+
+        result[0] = measured[0] / goal[0] * 100;
+        result[1] = measured[1] / goal[1] * 100;
+        result[2] = measured[2] / goal[2] * 100;
+        result[3] = measured[3] / goal[3] * 100;
+        result[4] = measured[4] / goal[4] * 100;
+
+        //추천활동 정하기
+        float min = 0;
+        float max = 100;
+        int recommend_min = 0;
+        int recommend_max=0;
+        //recommend는 0~4 를 통해 카테고리 알려줌
+
+        for(int i=0;i<result.length;i++) {
+            if(max<result[i]) {
+                //max의 값보다 array[i]이 크면 max = array[i]
+                max = result[i];
+                recommend_max = i;
+            }
+
+            if(min>result[i]) {
+                //min의 값보다 array[i]이 작으면 min = array[i]
+                min = result[i];
+                recommend_min = i;
+            }
+
+
+            //추천활동이 카테고리별 과잉(너무 많이 함)에 대한 결과일 경우 +5를 해준다.(setRecommend로 넘기기 쉽게)
+            if(max-100 > 100-min)
+                recommend_min = recommend_max+5;
+
+
+
+        }
+        setRecommend(recommend_min);
+
+
+        textView8 = (TextView) view.findViewById(R.id.textView8);
+        textView8.setText("" + result[0]);
+        textView9 = (TextView) view.findViewById(R.id.textView9);
+        textView9.setText("" + result[1]);
+        textView10 = (TextView) view.findViewById(R.id.textView10);
+        textView10.setText("" + result[2]);
+        textView11 = (TextView) view.findViewById(R.id.textView11);
+        textView11.setText("" + result[3]);
+        textView12 = (TextView) view.findViewById(R.id.textView12);
+        textView12.setText("" + result[4]);
+
+        progress1.setProgress(result[0]);
+        progress2.setProgress(result[1]);
+        progress3.setProgress(result[2]);
+        progress4.setProgress(result[3]);
+        progress5.setProgress(result[4]);
+
         return view;
     }
 

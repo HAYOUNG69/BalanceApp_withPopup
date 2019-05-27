@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
     private ViewPager mViewPager;
     FragmentManager fm;
     FragmentTransaction tran;
-    ProgressbarFragment frag1;
+    HomeFragment_p frag1;
     Button button;
     Button button2;
     int page;
@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
 
         //progressbar로 전환
         button2 = (Button)view.findViewById(R.id.button);
-        frag1 = new ProgressbarFragment();
+        frag1 = new HomeFragment_p();
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,11 +76,15 @@ public class HomeFragment extends Fragment {
         SQLiteDatabase db = helper.getWritableDatabase();
         //db.execSQL("delete from tb_timeline");
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019/05/22", "한강동아아파트", "수면", "01:15:16", "06:18:26"});
+                new String[]{"2019/05/24", "한강동아아파트", "sleep", "01:15:16", "06:18:26"});
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019/05/23", "경기대학교", "공부", "09:05:00", "11:55:12"});
+                new String[]{"2019/05/25", "경기대학교", "study", "09:05:00", "11:55:12"});
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019/05/24", "헬스장", "운동", "15:27:35", "18:46:33"});
+                new String[]{"2019/05/26", "헬스장", "exercise", "15:27:35", "18:46:33"});
+
+        //값 넘기기
+        setProgressbar(v, helper);
+
         db.close();
     }
 
@@ -135,7 +139,7 @@ public class HomeFragment extends Fragment {
     }
 
     //날짜 빼는 메소드
-    private static String subDate(String dt, int d) throws ParseException {
+    public static String subDate(String dt, int d) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
         Calendar cal = Calendar.getInstance();
@@ -146,6 +150,123 @@ public class HomeFragment extends Fragment {
         return format.format(cal.getTime());
     }
 
+//////////@@@@@@@@@@@@@@@@@////////////////////
+    //daily_balance에 데이터 넘기기
+    private void setProgressbar(View v, DBHelper helper) {
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from tb_timeline",null );
+        int i = 0;
+
+        if(cursor.getCount()==0) return;
+
+        while(cursor.moveToNext()) {
+            String date = cursor.getString(cursor.getColumnIndex("date"));
+            String week = getWeek(date);
+            String category = cursor.getString(cursor.getColumnIndex("category"));
+            String starttime =  cursor.getString(cursor.getColumnIndex("starttime"));
+            String endtime = cursor.getString(cursor.getColumnIndex("endtime"));
+            if (endtime == null) continue;
+            double time = getTime(starttime, endtime);
+            Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where date=?",  new String[]{date});
+            //특정 날짜의 row가 없으면 추가
+            if(cursor2.getCount()==0) {
+                db.execSQL("insert into tb_dailybalance (date, week, sleep, work, study, exercise, leisure, other) values (?,?,0,0,0,0,0,0)",
+                        new String[]{date, week});
+            }
+            Cursor cursor3 = db.rawQuery("select * from tb_dailybalance where date=?",  new String[]{date});
+            cursor3.moveToFirst();
+            double pretime = cursor3.getDouble(getCategory(category));
+            double totaltime = pretime + time;
+
+            String sql = "update tb_dailybalance set " + category + "=" + totaltime + " where date=\"" + date + "\"";
+            db.execSQL(sql);
+        }
+        db.close();
+    }
+
+    // 활동시간 계산
+    private double getTime(String starttime, String endtime) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        Date start = null;
+        Date end = null;
+
+        try {
+            start = format.parse(starttime);
+            end = format.parse(endtime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        double time = (end.getTime() - start.getTime()) / 1000;
+        time = Math.round(time/3600*100)/100.0;
+
+        return time;
+    }
+
+    //날짜로 요일얻기
+    private String getWeek(String date) {
+        String day = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd") ;
+        Date nDate = null;
+        try {
+            nDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar cal = Calendar.getInstance() ;
+        cal.setTime(nDate);
+
+        int dayNum = cal.get(Calendar.DAY_OF_WEEK) ;
+        switch(dayNum){
+            case 1:
+                day = "일";
+                break ;
+            case 2:
+                day = "월";
+                break ;
+            case 3:
+                day = "화";
+                break ;
+            case 4:
+                day = "수";
+                break ;
+            case 5:
+                day = "목";
+                break ;
+            case 6:
+                day = "금";
+                break ;
+            case 7:
+                day = "토";
+                break ;
+        }
+        return day;
+    }
+
+    private int getCategory(String category) {
+        int num;
+        switch(category){
+            case "sleep":
+                num = 3;
+                break ;
+            case "work":
+                num = 4;
+                break ;
+            case "study":
+                num = 5;
+                break ;
+            case "exercise":
+                num = 6;
+                break ;
+            case "leisure":
+                num = 7;
+                break ;
+            default:
+                num = 8;
+        }
+        return num;
+    }
 
 }
 

@@ -26,6 +26,7 @@ import org.qap.ctimelineview.TimelineRow;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimelineFragment extends Fragment {
@@ -88,31 +89,37 @@ public class TimelineFragment extends Fragment {
     private TimelineRow createTimelineRow(int id, String place, String category, String starttime) {
         //카테고리 이미지 분류
         int categoryNum;
-        String color;
+        String color, cg;
         switch (category) {
-            case "수면":
+            case "sleep":
                 categoryNum = 0;
                 color = "#414766";
+                cg = "수면";
                 break;
-            case "일":
+            case "work":
                 categoryNum = 1;
                 color = "#F98583";
+                cg = "일";
                 break;
-            case "공부":
+            case "study":
                 categoryNum = 2;
                 color = "#B4CC65";
+                cg = "공부";
                 break;
-            case "운동":
+            case "exercise":
                 categoryNum = 3;
                 color = "#FBB06D";
+                cg = "운동";
                 break;
-            case "여가":
+            case "leisure":
                 categoryNum = 4;
                 color = "#C7ACEE";
+                cg = "여가";
                 break;
             default:
                 categoryNum = 5;
                 color = "#888888";
+                cg = "기타";
         }
 
         //날짜 String -> Date
@@ -130,7 +137,7 @@ public class TimelineFragment extends Fragment {
         // 날짜설정
         myRow.setDate(date);
         // 카테고리 설정
-        myRow.setTitle(category);
+        myRow.setTitle(cg);
         // 장소 설정
         myRow.setDescription(place);
         // 이미지 설정
@@ -155,9 +162,6 @@ public class TimelineFragment extends Fragment {
         return myRow;
     }
 
-
-
-
     //DB에서 데이터 불러오기
     private void putData(View v, DBHelper helper) {
         String date = mParam1;
@@ -177,6 +181,8 @@ public class TimelineFragment extends Fragment {
             i++;
         }
 
+
         db.close();
     }
+
 }
