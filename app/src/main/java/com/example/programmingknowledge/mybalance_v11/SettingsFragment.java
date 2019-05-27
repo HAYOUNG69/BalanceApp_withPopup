@@ -1,6 +1,7 @@
 package com.example.programmingknowledge.mybalance_v11;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +24,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -52,17 +55,35 @@ public class SettingsFragment extends Fragment {
             //noti
             btn_noti = (Button)root.findViewById(R.id.btn_noti);
 
-            btn_noti.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notification();
-                }
-            });
+//            btn_noti.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    notification();
+//                }
+//            });
 
             btn_map.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(container.getContext(),GoogleMapActivity.class ));
+
+                    Intent intent = new Intent(container.getContext(), GoogleMapActivity.class);
+
+                    startActivityForResult(intent, 1);
+
+
+
+//                    startActivity(new Intent(container.getContext(),GoogleMapActivity.class ));
+//                    Dialog dialog = new Dialog(container.getContext());
+//
+//                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                    dialog.setContentView(R.layout.activity_googlemap);
+//                    WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+//
+//                    params.width=700;
+//                    params.height=600;
+//                    dialog.getWindow().setAttributes(params);
+//                    dialog.show();
+
 //                    AlertDialog.Builder ad = new AlertDialog.Builder(container.getContext());
 //                    ad.setIcon(R.mipmap.ic_launcher);
 //                    ad.setTitle("제목");
@@ -79,7 +100,7 @@ public class SettingsFragment extends Fragment {
 //                        }
 //                    });
 //
-//                    ad.setNegativeButton("ㅇㅇㅇㅇㅇㅇ", new DialogInterface.OnClickListener() {
+//                    ad.setNegativeButton("ㅇㅇㅇㅇㅇㅇ[변화x", new DialogInterface.OnClickListener() {
 //                        @Override
 //                        public void onClick(DialogInterface dialog, int which) {
 //                            dialog.dismiss();
@@ -114,37 +135,37 @@ public class SettingsFragment extends Fragment {
             return root;
     }
 
-    private void notification() {
-
-        Resources res = getResources();
-
-        Intent notificationIntent = new Intent(getContext(), GoogleMapActivity.class);
-        notificationIntent.putExtra("notificationId", 9999); //전달할 값
-        PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(),"default");
-
-        builder.setContentTitle("Notification")
-                .setContentText("이게 바로 노티다 캬햐ㅑ햐햐")
-                .setTicker("상태바 한줄 메시지")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis())
-                .setDefaults(Notification.DEFAULT_ALL);
-
-
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_MESSAGE)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
-        }
-
-        NotificationManager nm = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(1234, builder.build());
-    }
+//    private void notification() {
+////
+////        Resources res = getResources();
+////
+////        Intent notificationIntent = new Intent(getContext(), GoogleMapActivity.class);
+////        notificationIntent.putExtra("notificationId", 9999); //전달할 값
+////        PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+////
+////        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(),"default");
+////
+////        builder.setContentTitle("Notification")
+////                .setContentText("이게 바로 노티다 캬햐ㅑ햐햐")
+////                .setTicker("상태바 한줄 메시지")
+////                .setSmallIcon(R.mipmap.ic_launcher)
+////                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
+////                .setContentIntent(contentIntent)
+////                .setAutoCancel(true)
+////                .setWhen(System.currentTimeMillis())
+////                .setDefaults(Notification.DEFAULT_ALL);
+////
+////
+////
+////        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+////            builder.setCategory(Notification.CATEGORY_MESSAGE)
+////                    .setPriority(Notification.PRIORITY_HIGH)
+////                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+////        }
+////
+////        NotificationManager nm = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+////        nm.notify(1234, builder.build());
+////    }
 
 
 }
