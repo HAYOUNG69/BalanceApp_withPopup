@@ -17,7 +17,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyALr88wG8gkDB_iGiy6YhugN87euZgGIQA" />
+            android:value="AIzaSyCzIbfWIeAUYr9Uox5iyo_sKUwaSFD7fXY" />
 
         <activity
             android:name=".MainActivity"
@@ -28,7 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.GoogleMapAPI.GoogleMapActivity" />
+        <activity android:name="com.example.GoogleMapAPI.GoogleMapActivity"
+
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

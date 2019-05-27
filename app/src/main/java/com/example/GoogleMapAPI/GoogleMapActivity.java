@@ -2,6 +2,7 @@ package com.example.GoogleMapAPI;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 //import android.widget.ArrayAdapter;
@@ -88,7 +90,7 @@ public class GoogleMapActivity extends AppCompatActivity
     private AppCompatActivity mActivity;
     boolean askPermissionOnceAgain = false;
     boolean mRequestingLocationUpdates = false;
-   // Location mCurrentLocatiion;
+    // Location mCurrentLocatiion;
     boolean mMoveMapByUser = true;
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
@@ -107,20 +109,38 @@ public class GoogleMapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //popup으로 보이게 윈도우스타일 변경
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_googlemap);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+//                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        setContentView(R.layout.activity_googlemap);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.fragment_settings);
+
+        Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_googlemap);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+
+        params.width=850;
+        params.height=1550;
+        dialog.getWindow().setAttributes(params);
+        dialog.show();
+        //setContentView(dialog.getCurrentFocus());
+
 
         previous_marker = new ArrayList<Marker>();
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPlaceInformation(currentPosition);
-            }
-        });
+//        Button button = (Button) findViewById(R.id.button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showPlaceInformation(currentPosition);
+//            }
+//        });
 
         Log.d(TAG, "onCreate");
         mActivity = this;
@@ -241,16 +261,15 @@ public class GoogleMapActivity extends AppCompatActivity
         setCurrentLocation(location, markerTitle, markerSnippet);   //마커 생성
         //mCurrentLocatiion = location;
 
-        if(previousPosition != null) {  //previousPosition이 null이 아니면 실행
+        if (previousPosition != null) {  //previousPosition이 null이 아니면 실행
             distance = SphericalUtil.computeDistanceBetween(currentPosition, previousPosition);  //이전 거리와 현재 거리 비교 (일단 10m로)
-            System.out.println("이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude +" " + previousPosition.longitude +" 거리: " + distance); //최초 실행때는 실행되면 안됨
+            System.out.println("이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude + " " + previousPosition.longitude + " 거리: " + distance); //최초 실행때는 실행되면 안됨
 
             if (distance >= 2) {      //추가추가 (1m반경 이내면)
                 System.out.println("2m를 벗어남");
                 Toast toast = Toast.makeText(this, "2m를 벗어남!", Toast.LENGTH_SHORT);
                 toast.show();
-            }
-            else{  //전 위치에서 1m를 벗어나면 실행되야 됨
+            } else {  //전 위치에서 1m를 벗어나면 실행되야 됨
                 System.out.println("비슷한 위치");
             }
         }
@@ -363,7 +382,8 @@ public class GoogleMapActivity extends AppCompatActivity
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {  //현재 위치 가져오기
         mMoveMapByUser = false;
 
-        if (currentMarker != null) currentMarker.remove();  //현재 마커가 null값이 아니면 지우기 (새로 가져오기 위해) (이 명령문 지우면 마커 그림이 계속 쌓임)
+        if (currentMarker != null)
+            currentMarker.remove();  //현재 마커가 null값이 아니면 지우기 (새로 가져오기 위해) (이 명령문 지우면 마커 그림이 계속 쌓임)
 
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());  //현재 경도와 위도 가져오기
 
@@ -543,9 +563,12 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPlacesFailure(PlacesException e) { }
+    public void onPlacesFailure(PlacesException e) {
+    }
+
     @Override
-    public void onPlacesStart() { }
+    public void onPlacesStart() {
+    }
 
     @Override
     public void onPlacesSuccess(final List<Place> places) {  ////!!!!!!!
@@ -571,7 +594,7 @@ public class GoogleMapActivity extends AppCompatActivity
                     //placeAddr = markerSnippet;  //주소가 필요할까??
                     //tmp = place.getLocation();   //위도와 경도를 다시 받아오기 위해서(필요할까?)
 
-                    if(placeDistance > 31){  //시청이랑 이상한 길 없앨려고 넣었음
+                    if (placeDistance > 31) {  //시청이랑 이상한 길 없앨려고 넣었음
                         continue;
                     }
                     //미터로 반환
@@ -597,15 +620,15 @@ public class GoogleMapActivity extends AppCompatActivity
                 //mlist에 저장된 객체들을 거리순으로 정렬
 
                 final ListView listView = (ListView) findViewById(R.id.listView);
-                ArrayList<HashMap<String,String>> MarkerList = new ArrayList<>();
-                SimpleAdapter simpleAdapter = new SimpleAdapter(GoogleMapActivity.this,MarkerList,android.R.layout.simple_list_item_2,new String[]{"place_name","place_type"},new int[]{android.R.id.text1,android.R.id.text2});
+                ArrayList<HashMap<String, String>> MarkerList = new ArrayList<>();
+                SimpleAdapter simpleAdapter = new SimpleAdapter(GoogleMapActivity.this, MarkerList, android.R.layout.simple_list_item_2, new String[]{"place_name", "place_type"}, new int[]{android.R.id.text1, android.R.id.text2});
 
                 for (MarkerInfo m : mlist) {   //이 때 거리 순으로 정렬
-                    HashMap<String,String> tmplist = new HashMap<>();
+                    HashMap<String, String> tmplist = new HashMap<>();
                     tmplist.put("place_name", m.getPlaceName());
                     tmplist.put("place_type", m.getPlaceType());
                     System.out.println("거리 확인: " + m.getDistance());
-                    if(m.getDistance() > 31){
+                    if (m.getDistance() > 31) {
                         continue;
                     }
                     MarkerList.add(tmplist);  //리스트뷰에 띄울 리스트 생성
@@ -619,7 +642,7 @@ public class GoogleMapActivity extends AppCompatActivity
                         TextView tmp2 = (TextView) v.findViewById(android.R.id.text2);
                         String title = tmp.getText().toString();
                         String type = tmp2.getText().toString();
-                        System.out.println("클릭한 리스트에 장소 이름: " + title +"\n클릭한 리스트에 타입: " + type);
+                        System.out.println("클릭한 리스트에 장소 이름: " + title + "\n클릭한 리스트에 타입: " + type);
 
                         long now = System.currentTimeMillis();
                         Date date = new Date(now);
@@ -632,7 +655,7 @@ public class GoogleMapActivity extends AppCompatActivity
                         //db 삽입 부분
                         DBHelper helper = new DBHelper(getApplicationContext());
                         SQLiteDatabase db = helper.getWritableDatabase();
-                        Cursor cursor = db.rawQuery("select * from tb_timeline where endtime is NULL",null );
+                        Cursor cursor = db.rawQuery("select * from tb_timeline where endtime is NULL", null);
                         cursor.moveToFirst();
                         String place = cursor.getString(cursor.getColumnIndex("place"));
                         String category = cursor.getString(cursor.getColumnIndex("category"));
@@ -665,7 +688,8 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPlacesFinished() { }
+    public void onPlacesFinished() {
+    }
 
     public void showPlaceInformation(LatLng location) {   //////////!!!!!!!
         mGoogleMap.clear();//지도 클리어
@@ -689,39 +713,39 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 }
 
-class MarkerInfo{
+class MarkerInfo {
     String placeName;
     String placeType;
     double distance;
 
-    MarkerInfo(String placeName, String placeType, double distance){
+    MarkerInfo(String placeName, String placeType, double distance) {
         this.placeName = placeName;
         this.placeType = placeType;
         this.distance = distance;
     }
 
-    String getPlaceName(){
+    String getPlaceName() {
         return placeName;
     }
 
-    String getPlaceType(){
+    String getPlaceType() {
         return placeType;
     }
 
-    double getDistance(){
+    double getDistance() {
         return distance;
     }
 }
 
-class markerComparator implements  Comparator<MarkerInfo>{
+class markerComparator implements Comparator<MarkerInfo> {
     @Override
     public int compare(MarkerInfo first, MarkerInfo second) {
         double firstValue = first.getDistance();
         double secondValue = second.getDistance();
 
-        if(firstValue > secondValue){
+        if (firstValue > secondValue) {
             return 1;
-        }else if(firstValue < secondValue){
+        } else if (firstValue < secondValue) {
             return -1;
         } else {
             return 0;
