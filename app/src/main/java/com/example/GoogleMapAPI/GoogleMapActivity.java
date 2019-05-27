@@ -79,9 +79,8 @@ public class GoogleMapActivity extends AppCompatActivity
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
-    private static final int UPDATE_INTERVAL_MS = 15000;  // 1초=1000  15초로 고침
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
-
+    private static final int UPDATE_INTERVAL_MS = 50000;  // 1초=1000  50초로 고침(약 50)  //50초마다 onlocationChanged가 호출 됨
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 50000; // 0.5초   //이게 뭘까...?
 
     private AppCompatActivity mActivity;
     boolean askPermissionOnceAgain = false;
@@ -93,11 +92,13 @@ public class GoogleMapActivity extends AppCompatActivity
 
 
     LatLng previousPosition = null;   //추가
+    float minDis = 50;  //추가
 
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(UPDATE_INTERVAL_MS)
-            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+            .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS)
+            .setSmallestDisplacement(minDis);   //추가  //10미터를 안 벗어나면 현재 위치 호출 안함..???
 
     List<Marker> previous_marker = null;
 
@@ -223,9 +224,13 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLocationChanged(Location location) {   ////위치 바꿀 때마다 호출되는 메소드!!!!!!!!!!!!!!!
+    public void onLocationChanged(Location location) {   ////위치 바꿀 때마다 호출되는 메소드!!!!!!!!!!!!!!!   //10m를 벗어날 때만 호출 되야 함
         double distance;
         currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+        System.out.println("1.. 현재 위치 가져오기");
+       // Toast toast = Toast.makeText(this, "3m를 벗어남!", Toast.LENGTH_SHORT);
+       // toast.show();
 
         Log.d(TAG, "onLocationChanged : ");
 
@@ -238,18 +243,20 @@ public class GoogleMapActivity extends AppCompatActivity
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);   //마커 생성
         //mCurrentLocatiion = location;
+        System.out.println("2.. 현재 위치: " + String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude()));
 
         if(previousPosition != null) {  //previousPosition이 null이 아니면 실행
-            distance = SphericalUtil.computeDistanceBetween(currentPosition, previousPosition);  //이전 거리와 현재 거리 비교 (일단 10m로)
-            System.out.println("이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude +" " + previousPosition.longitude +" 거리: " + distance); //최초 실행때는 실행되면 안됨
+            distance = 0;
+            distance = SphericalUtil.computeDistanceBetween(currentPosition, previousPosition);
+            System.out.println("3.. 이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude +" " + previousPosition.longitude +" 거리: " + distance); //최초 실행때는 실행되면 안됨
 
-            if (distance >= 2) {      //추가추가 (1m반경 이내면)
-                System.out.println("2m를 벗어남");
-                Toast toast = Toast.makeText(this, "2m를 벗어남!", Toast.LENGTH_SHORT);
-                toast.show();
+            if (distance >= 50) {      //추가추가 (1m반경 이내면)    //처음에 실행 됨   //벗어났을 때!!!
+                System.out.println("4.. 50m를 벗어남");
+                Toast toast2 = Toast.makeText(this, "50m를 벗어남!", Toast.LENGTH_SHORT);
+                toast2.show();
             }
             else{  //전 위치에서 1m를 벗어나면 실행되야 됨
-                System.out.println("비슷한 위치");
+                System.out.println("4.. 비슷한 위치");
             }
         }
 
@@ -566,8 +573,12 @@ public class GoogleMapActivity extends AppCompatActivity
                     placeName = place.getName();
                     placeDistance = SphericalUtil.computeDistanceBetween(currentPosition, latLng);
 
+                    for(String s:placeType){
+                        System.out.println(placeName + ": " + s);
+                    }
+
                     //placeAddr = markerSnippet;  //주소가 필요할까??
-                    //tmp = place.getLocation();   //위도와 경도를 다시 받아오기 위해서(필요할까?)
+                    //tmp = place.getLocation();  //위도와 경도를 다시 받아오기 위해서(필요할까?)
 
                     if(placeDistance > 31){  //시청이랑 이상한 길 없앨려고 넣었음
                         continue;
@@ -598,11 +609,15 @@ public class GoogleMapActivity extends AppCompatActivity
                 ArrayList<HashMap<String,String>> MarkerList = new ArrayList<>();
                 SimpleAdapter simpleAdapter = new SimpleAdapter(GoogleMapActivity.this,MarkerList,android.R.layout.simple_list_item_2,new String[]{"place_name","place_type"},new int[]{android.R.id.text1,android.R.id.text2});
 
-                for (MarkerInfo m : mlist) {   //이 때 거리 순으로 정렬
+                int chk = 0;
+                for (MarkerInfo m : mlist) {   //이 때 거리 순으로 정렬  //리스트에
+                    /*if(chk==0){
+
+                    }*/
                     HashMap<String,String> tmplist = new HashMap<>();
                     tmplist.put("place_name", m.getPlaceName());
                     tmplist.put("place_type", m.getPlaceType());
-                    System.out.println("거리 확인: " + m.getDistance());
+                    System.out.println("장소: " + m.getPlaceName() + "거리 확인: " + m.getDistance());
                     if(m.getDistance() > 31){
                         continue;
                     }
@@ -641,7 +656,7 @@ public class GoogleMapActivity extends AppCompatActivity
     @Override
     public void onPlacesFinished() { }
 
-    public void showPlaceInformation(LatLng location) {   //////////!!!!!!!
+    public void showPlaceInformation(LatLng location) {   //////////버튼 눌렀을 때만..
         mGoogleMap.clear();//지도 클리어
 
         if (previous_marker != null)   //마커가 존재하면
@@ -651,7 +666,7 @@ public class GoogleMapActivity extends AppCompatActivity
                 .listener(GoogleMapActivity.this)
                 .key("AIzaSyBzMQMBkCT4TIyu5zpqVDxWUu9yAvlJE-k")
                 .latlng(location.latitude, location.longitude)  //현재 위치
-                .radius(30) //50 미터 내에서 검색
+                .radius(25) //25 미터 내에서 검색
                 //.type(PlaceType.BUS_STATION)  //모든 타입을 검색하면 시청이 검색 됨..흐규흐규...
                 .build()
                 .execute();
