@@ -360,7 +360,7 @@ public class ProgressbarFragment extends Fragment {
         //db 추가하기
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-14','토',0,1,2,4,8,9,'잠 부족')");
+        db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-14','토',0,1,2,4,8,0,'잠 부족')");
         db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-15','일',10,1,2,4,8,0,'운동 부족')");
         db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-16','월',8,8,3,2,2,1,'균형')");
         db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-17','화',6,6,6,6,0,0,'여가 부족')");
