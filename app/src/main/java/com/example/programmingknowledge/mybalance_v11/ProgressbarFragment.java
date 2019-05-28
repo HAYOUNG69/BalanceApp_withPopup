@@ -25,6 +25,7 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -64,6 +65,9 @@ public class ProgressbarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, Bundle savedInstanceState) {
         final DBHelper helper = new DBHelper(container.getContext());
         view = inflater.inflate(R.layout.fragment_progressbar, container, false);
+
+        //tb_dailybalance 설정
+        setProgressbar(view, helper);
 
         //위에 날짜 띄우기
         dateNow = (TextView)view.findViewById(R.id.today);
@@ -366,6 +370,7 @@ public class ProgressbarFragment extends Fragment {
         }
     }
 
+    /*
     public void setDailybalance(View v, DBHelper helper) {
 
         //db 추가하기
@@ -381,7 +386,7 @@ public class ProgressbarFragment extends Fragment {
         db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-21','토',4,4,4,4,4,4,'운동 부족')");
         db.execSQL("insert into tb_dailybalance (date,week,sleep, work, study, exercise, leisure, other, recommend) values ('2019-05-22','일',10,3,3,3,3,2,'일 부족')");
         db.close();
-    }
+    }*/
 
     public void showMessage(String title, String Message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -389,6 +394,78 @@ public class ProgressbarFragment extends Fragment {
         builder.setTitle(title);
         builder.setMessage(Message);
         builder.show();
+    }
+
+    //tb_dailybalance 설정
+    private void setProgressbar(View v, DBHelper helper) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        double sleep = 0, work = 0, study = 0, exercise = 0, leisure = 0, other = 0;
+        String week = getWeek(mParam1);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from tb_dailybalance where date=?", new String[]{mParam1});
+        if(cursor.getCount()==0) {
+            db.execSQL("insert into tb_dailybalance (date, week, sleep, work, study, exercise, leisure, other) values (?,?,0,0,0,0,0,0)",
+                    new String[]{mParam1, week});
+        }
+        Cursor cursor2 = db.rawQuery("select * from tb_timeline where date=?", new String[]{mParam1});
+        while(cursor2.moveToNext()) {
+            String category = cursor2.getString(cursor2.getColumnIndex("category"));
+            String starttime =  cursor2.getString(cursor2.getColumnIndex("starttime"));
+            String endtime = cursor2.getString(cursor2.getColumnIndex("endtime"));
+            if (endtime == null) {
+                try {
+                    if (format.parse(starttime).getTime() > format.parse(format.format(new Date())).getTime())
+                        endtime = "24:00:00";
+                    else
+                        endtime = format.format(new Date());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            double playtime = getTime(starttime, endtime);
+            switch (category) {
+                case "sleep":
+                    sleep += playtime;
+                    break ;
+                case "work":
+                    work += playtime;
+                    break ;
+                case "study":
+                    study += playtime;
+                    break ;
+                case "exercise":
+                    exercise += playtime;
+                    break ;
+                case "leisure":
+                    leisure += playtime;
+                    break ;
+                default:
+                    other += playtime;
+            }
+        }
+        String sql = "update tb_dailybalance set sleep=" + sleep + ", work=" + work + ", study=" + study
+                + ", exercise=" + exercise + ", leisure=" + leisure + ", other=" + other + " where date=\"" + mParam1 + "\"";
+        db.execSQL(sql);
+        db.close();
+    }
+
+
+    // 활동시간 계산
+    private double getTime(String starttime, String endtime) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        Date start = null;
+        Date end = null;
+
+        try {
+            start = format.parse(starttime);
+            end = format.parse(endtime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        double time = (end.getTime() - start.getTime()) / 1000;
+        time = Math.round(time/3600*100)/100.0;
+
+        return time;
     }
 
 

@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.programmingknowledge.mybalance_v11.HomeFragment.getWeek;
 import static com.example.programmingknowledge.mybalance_v11.HomeFragment.subDate;
 
 public class HomeFragment_p extends Fragment {

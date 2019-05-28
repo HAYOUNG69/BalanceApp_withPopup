@@ -662,33 +662,38 @@ public class GoogleMapActivity extends AppCompatActivity
                         SQLiteDatabase db = helper.getWritableDatabase();
                         Cursor cursor = db.rawQuery("select * from tb_timeline where endtime is NULL", null);
 
+                        //아예 처음시작하는 활동인 경우
                         if (cursor.getCount() == 0 ) {
-                            showMessage("Error", "Nothing found");
+                            db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                                    new String[]{formatDate, title, type, formatTime});
                             return;
                         }
-                        cursor.moveToFirst();
-                        String place = cursor.getString(cursor.getColumnIndex("place"));
-                        String category = cursor.getString(cursor.getColumnIndex("category"));
-                        String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
+                        //전의 활동이 있는경우
+                        else {
+                            cursor.moveToFirst();
+                            String place = cursor.getString(cursor.getColumnIndex("place"));
+                            String category = cursor.getString(cursor.getColumnIndex("category"));
+                            String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
 
-                        try {
-                            //활동 중 날짜가 넘어가는 경우 ///단 한 활동이 24시간을 넘지 않는다는 가정하에
-                            if (sdftime.parse(starttime).getTime() > sdftime.parse(formatTime).getTime()) {
-                                db.execSQL("update tb_timeline set endtime=? where endtime is NULL",
-                                        new String[]{"24:00:00"});
-                                db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
-                                        new String[]{formatDate, place, category, "00:00:00"});
+                            try {
+                                //활동 중 날짜가 넘어가는 경우 ///단 한 활동이 24시간을 넘지 않는다는 가정하에
+                                if (sdftime.parse(starttime).getTime() > sdftime.parse(formatTime).getTime()) {
+                                    db.execSQL("update tb_timeline set endtime=? where endtime is NULL",
+                                            new String[]{"24:00:00"});
+                                    db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                                            new String[]{formatDate, place, category, "00:00:00"});
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
 
-                        //클릭 동시에 시작시간을 전에 활동 시작시간으로 update
-                        db.execSQL("update tb_timeline set endtime=? where endtime is NULL",
-                                new String[]{formatTime});
-                        //현재 장소, 카테고리, 현재시간 insert
-                        db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
-                                new String[]{formatDate, title, type, formatTime});
+                            //클릭 동시에 시작시간을 전에 활동 시작시간으로 update
+                            db.execSQL("update tb_timeline set endtime=? where endtime is NULL",
+                                    new String[]{formatTime});
+                            //현재 장소, 카테고리, 현재시간 insert
+                            db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                                    new String[]{formatDate, title, type, formatTime});
+                        }
 
                         db.close();
                     }

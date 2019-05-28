@@ -83,10 +83,18 @@ public class HomeFragment extends Fragment {
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
                 new String[]{"2019/05/27", "헬스장", "exercise", "15:27:35", "18:46:33"});
         db.execSQL("insert into tb_timeline (date, place, category, starttime, endtime) values (?,?,?,?,?)",
-                new String[]{"2019/05/28", "헬스장", "exercise", "15:27:35", "18:46:33"});
+                new String[]{"2019/05/28", "집", "sleep", "01:02:44", null});
 
-        //값 넘기기
-        setProgressbar(v, helper);
+        Cursor cursor = db.rawQuery("select distinct date from tb_timeline", null);
+        while(cursor.moveToNext()) {
+            String date = cursor.getString(cursor.getColumnIndex("date"));
+            Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where date=?",  new String[]{date});
+            //특정 날짜의 row가 없으면 추가
+            if(cursor2.getCount()==0) {
+                db.execSQL("insert into tb_dailybalance (date, week, sleep, work, study, exercise, leisure, other) values (?,?,0,0,0,0,0,0)",
+                        new String[]{date, getWeek(date)});
+            }
+        }
 
         db.close();
     }
@@ -153,59 +161,6 @@ public class HomeFragment extends Fragment {
         return format.format(cal.getTime());
     }
 
-//////////@@@@@@@@@@@@@@@@@////////////////////
-    //daily_balance에 데이터 넘기기
-    private void setProgressbar(View v, DBHelper helper) {
-
-        SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from tb_timeline",null );
-        int i = 0;
-
-        if(cursor.getCount()==0) return;
-
-        while(cursor.moveToNext()) {
-            String date = cursor.getString(cursor.getColumnIndex("date"));
-            String week = getWeek(date);
-            String category = cursor.getString(cursor.getColumnIndex("category"));
-            String starttime =  cursor.getString(cursor.getColumnIndex("starttime"));
-            String endtime = cursor.getString(cursor.getColumnIndex("endtime"));
-            if (endtime == null) continue;
-            double time = getTime(starttime, endtime);
-            Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where date=?",  new String[]{date});
-            //특정 날짜의 row가 없으면 추가
-            if(cursor2.getCount()==0) {
-                db.execSQL("insert into tb_dailybalance (date, week, sleep, work, study, exercise, leisure, other) values (?,?,0,0,0,0,0,0)",
-                        new String[]{date, week});
-            }
-            Cursor cursor3 = db.rawQuery("select * from tb_dailybalance where date=?",  new String[]{date});
-            cursor3.moveToFirst();
-            double pretime = cursor3.getDouble(getCategory(category));
-            double totaltime = pretime + time;
-
-            String sql = "update tb_dailybalance set " + category + "=" + totaltime + " where date=\"" + date + "\"";
-            db.execSQL(sql);
-        }
-        db.close();
-    }
-
-    // 활동시간 계산
-    private double getTime(String starttime, String endtime) {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        Date start = null;
-        Date end = null;
-
-        try {
-            start = format.parse(starttime);
-            end = format.parse(endtime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        double time = (end.getTime() - start.getTime()) / 1000;
-        time = Math.round(time/3600*100)/100.0;
-
-        return time;
-    }
-
     //날짜로 요일얻기
     public static String getWeek(String date) {
         String day = "";
@@ -246,30 +201,5 @@ public class HomeFragment extends Fragment {
         }
         return day;
     }
-
-    private int getCategory(String category) {
-        int num;
-        switch(category){
-            case "sleep":
-                num = 3;
-                break ;
-            case "work":
-                num = 4;
-                break ;
-            case "study":
-                num = 5;
-                break ;
-            case "exercise":
-                num = 6;
-                break ;
-            case "leisure":
-                num = 7;
-                break ;
-            default:
-                num = 8;
-        }
-        return num;
-    }
-
 }
 
