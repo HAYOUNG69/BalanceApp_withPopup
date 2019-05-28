@@ -1,7 +1,7 @@
 package com.example.programmingknowledge.mybalance_v11;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -10,12 +10,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.qap.ctimelineview.TimelineRow;
 
@@ -23,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TimelineFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -76,6 +83,90 @@ public class TimelineFragment extends Fragment {
         // Get the ListView and Bind it with the Timeline Adapter
         ListView myListView = (ListView) view.findViewById(R.id.timeline_listView);
         myListView.setAdapter(myAdapter);
+
+        //길게 눌렀을때 수정/삭제
+        final AlertDialog.Builder alBuilder = new AlertDialog.Builder(container.getContext());
+        AdapterView.OnItemLongClickListener adapterListener = new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
+                final TimelineRow row = timelineRowsList.get(position);
+                final SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm:ss");
+                final EditText place = new EditText(getActivity());
+                final EditText category = new EditText(getActivity());
+                final TextView sPlace = new TextView(getActivity());
+                final TextView sCategory = new TextView(getActivity());
+
+                place.setSingleLine(true);
+                category.setSingleLine(true);
+                sPlace.setText("장소");
+                sCategory.setText("카테고리");
+
+                LinearLayout container = new LinearLayout(getContext());
+                LinearLayout.LayoutParams params = new  LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+
+                place.setLayoutParams(params);
+                category.setLayoutParams(params);
+                sPlace.setLayoutParams(params);
+                sCategory.setLayoutParams(params);
+                container.setOrientation(LinearLayout.VERTICAL);
+                container.addView(sPlace);
+                container.addView(place);
+                container.addView(sCategory);
+                container.addView(category);
+
+
+                alBuilder.setMessage("장소/카테고리 수정");
+                alBuilder.setTitle("타임라인 수정/삭제");
+                alBuilder.setView(container);
+
+                // "취소" 버튼을 누르면 실행되는 리스너
+                alBuilder.setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return; // 아무런 작업도 하지 않고 돌아간다
+                    }
+                });
+
+                // "삭제" 버튼을 누르면 실행되는 리스너
+                alBuilder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        timelineRowsList.remove(position);
+                        String starttime = transFormat.format(row.getDate());
+                        DBHelper helper = new DBHelper(getContext());
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        db.execSQL("DELETE FROM tb_timeline WHERE starttime = \"" + starttime + "\"");
+                        db.close();
+                        myAdapter.notifyDataSetChanged();
+                    }
+                });
+
+                // "수정" 버튼을 누르면 실행되는 리스너
+                alBuilder.setNegativeButton("수정", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String sPlace = place.getText().toString();
+                        String sCategory = category.getText().toString();
+                        String starttime = transFormat.format(row.getDate());
+                        DBHelper helper = new DBHelper(getContext());
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        db.execSQL("UPDATE tb_timeline SET place=\"" + sPlace + "\", category="
+                                + "\"" + sCategory + "\" WHERE starttime = \"" + starttime + "\"");
+                        db.close();
+                        putData(view, helper);
+                        myAdapter.notifyDataSetChanged();
+                    }
+                });
+
+                alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+
+                return false;
+            }
+        };
+        myListView.setOnItemLongClickListener(adapterListener);
+
 
         return view;
     }
@@ -159,6 +250,7 @@ public class TimelineFragment extends Fragment {
 
     //DB에서 데이터 불러오기
     private void putData(View v, DBHelper helper) {
+        timelineRowsList.clear();
         String date = mParam1;
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from tb_timeline where date=?",
