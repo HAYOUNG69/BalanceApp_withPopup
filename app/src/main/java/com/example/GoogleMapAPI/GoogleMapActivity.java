@@ -3,6 +3,7 @@ package com.example.GoogleMapAPI;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -83,9 +85,13 @@ public class GoogleMapActivity extends AppCompatActivity
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
-    private static final int UPDATE_INTERVAL_MS = 15000;  // 1초=1000  15초로 고침
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
-
+    private static final int UPDATE_INTERVAL_MS = 10000;  // 1초=1000  5분으로 고침
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 10000; // 0.5초=500 //5분=300초=300000 //5분보다 빨리 검색하지 않는다.
+    //설명
+    //.setInterval(15000) // 15 seconds
+    //.setFastestInterval(5000) // 5000ms
+    //
+    //이렇게 설정 하셨으면 기기는 15초마다 혹은 그보다 더 빠르거나 느리게 위치를 수집하지만 5초보다 빠르게 수집하진 않을것입니다
 
     private AppCompatActivity mActivity;
     boolean askPermissionOnceAgain = false;
@@ -120,7 +126,7 @@ public class GoogleMapActivity extends AppCompatActivity
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_googlemap);
 
-        Dialog dialog = new Dialog(this);
+       /* Dialog dialog = new Dialog(this);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getCurrentFocus();
@@ -129,7 +135,7 @@ public class GoogleMapActivity extends AppCompatActivity
         params.width=850;
         params.height=1550;
         dialog.getWindow().setAttributes(params);
-        dialog.show();
+        dialog.show();*/
         //setContentView(dialog.getCurrentFocus());
 
 
@@ -157,6 +163,14 @@ public class GoogleMapActivity extends AppCompatActivity
         MapFragment mapFragment = (MapFragment) getFragmentManager()     //지도 fragment 생성
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ///지영수정
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int width = (int) (display.getWidth()*0.95); //Display 사이즈의 95%
+        int height = (int) (display.getHeight()*0.95);  //Display 사이즈의 95%
+        getWindow().getAttributes().width = width;
+        getWindow().getAttributes().height = height;
+        ///
     }
 
     @Override
@@ -248,36 +262,48 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLocationChanged(Location location) {   ////위치 바꿀 때마다 호출되는 메소드!!!!!!!!!!!!!!!
+    public void onLocationChanged(Location location) {  ////5분에 한번씩 호출
         double distance;
+        double distanceMeter;
+        double curlat, curlong, prelat, prelong;   //거리 오차를 줄이기 위한 변수
+
         currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
         Log.d(TAG, "onLocationChanged : ");
 
         String markerTitle = getCurrentAddress(currentPosition);
-        //String markerTitle = "현재 위치입니다";
-
         String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                 + " 경도:" + String.valueOf(location.getLongitude());
 
+        System.out.println("현재 위치: " + markerSnippet);
         //현재 위치에 마커 생성하고 이동
         setCurrentLocation(location, markerTitle, markerSnippet);   //마커 생성
         //mCurrentLocatiion = location;
 
-        if (previousPosition != null) {  //previousPosition이 null이 아니면 실행
-            distance = SphericalUtil.computeDistanceBetween(currentPosition, previousPosition);  //이전 거리와 현재 거리 비교 (일단 10m로)
-            System.out.println("이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude + " " + previousPosition.longitude + " 거리: " + distance); //최초 실행때는 실행되면 안됨
+        if (previousPosition != null) {  //previousPosition이 null이 아니면 실행(이전 위치가 존재, 최초 실행때만 제외하고 계속 실행되야 함)
+            /*curlat = Math.round(currentPosition.latitude*100000)/100000.0;    //소수 5째자리 까지(오차를 줄이기 위해)
+            curlong = Math.round(currentPosition.longitude*100000)/100000.0;  //소수 5째자리 까지(오차를 줄이기 위해)
+            prelat = Math.round(previousPosition.latitude*100000)/100000.0;  //소수 5째자리 까지(오차를 줄이기 위해)
+            prelong = Math.round(previousPosition.latitude*100000)/100000.0;  //소수 5째자리 까지(오차를 줄이기 위해)*/
 
-            if (distance >= 2) {      //추가추가 (1m반경 이내면)
-                System.out.println("2m를 벗어남");
-                Toast toast = Toast.makeText(this, "2m를 벗어남!", Toast.LENGTH_SHORT);
+            distance = SphericalUtil.computeDistanceBetween(currentPosition, previousPosition);  //이전 거리와 현재 거리 비교 (일단 10m로)
+            //distanceMeter = distance(curlat, curlong, prelat, prelong);
+            System.out.println("이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude + " " + previousPosition.longitude + " distance: " + distance); //최초 실행때는 실행되면 안됨, 이전 위치 존재x
+
+            if (distance >= 50) {      //추가추가
+                System.out.println("타임라인에 입력된 장소로부터 50m를 벗어남");
+                Toast toast = Toast.makeText(this, "50m를 벗어남!", Toast.LENGTH_SHORT);  //50m를 벗어났다는 알림이 핸드폰에 뜸
                 toast.show();
-            } else {  //전 위치에서 1m를 벗어나면 실행되야 됨
+                /*
+                 *
+                 * 이 때 팝업이 떠야 합니다.
+                 *
+                 * */
+                previousPosition = currentPosition; //거리 범위를 넘었으니깐 현재 포지션은 다음 setCurrentLocation가 실행될 때 이전 포지션이 된다.
+            } else {
                 System.out.println("비슷한 위치");
             }
         }
-
-        previousPosition = currentPosition; //현재 포지션은 다음 setCurrentLocation가 실행될 때 이전 포지션이 된다.
     }
 
     @Override
@@ -407,7 +433,7 @@ public class GoogleMapActivity extends AppCompatActivity
         }
     }
 
-    public void setDefaultLocation() {  //!!!!!!!디폴트 위치 가져오기(경기대학교)
+    public void setDefaultLocation() {  //디폴트 위치 가져오기(경기대학교)
         mMoveMapByUser = false;
 
         LatLng DEFAULT_LOCATION = new LatLng(37.300962, 127.035782); //디폴트 위치, 경기대
@@ -724,7 +750,7 @@ public class GoogleMapActivity extends AppCompatActivity
                 .listener(GoogleMapActivity.this)
                 .key("AIzaSyBzMQMBkCT4TIyu5zpqVDxWUu9yAvlJE-k")
                 .latlng(location.latitude, location.longitude)  //현재 위치
-                .radius(30) //50 미터 내에서 검색
+                .radius(30) //30 미터 내에서 검색
                 //.type(PlaceType.BUS_STATION)  //모든 타입을 검색하면 시청이 검색 됨..흐규흐규...
                 .build()
                 .execute();
