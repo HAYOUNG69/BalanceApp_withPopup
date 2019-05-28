@@ -4,12 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id = "@+id/nowDate"
-        android:textSize="35sp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearlayout7"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id = "@+id/nowDate"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text = "의 타임라인" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/timeline_listView"
@@ -18,7 +37,7 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:scrollbars="vertical"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="45dp"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp" />
 

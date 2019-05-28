@@ -43,6 +43,7 @@ public class HomeFragment_p extends Fragment {
         Cursor cursor = db.rawQuery("select count(date) from tb_dailybalance",null);
         cursor.moveToFirst();
         page = cursor.getInt(0);
+        db.close();
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager_progressbar);
         HomeFragment_p.MyPagerAdapter adapter = new HomeFragment_p.MyPagerAdapter(getChildFragmentManager(), page);

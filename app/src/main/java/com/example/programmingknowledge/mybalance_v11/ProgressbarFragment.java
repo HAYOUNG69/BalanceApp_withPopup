@@ -1,6 +1,7 @@
 package com.example.programmingknowledge.mybalance_v11;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,8 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.example.programmingknowledge.mybalance_v11.HomeFragment.getWeek;
 
 public class ProgressbarFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -119,16 +123,16 @@ public class ProgressbarFragment extends Fragment {
 
         SQLiteDatabase db = helper.getWritableDatabase();
 
-
-        Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week='토' ", null);
-        Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where week='토' ", null);
+        Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where date=? ", new String[]{mParam1});
+        String week = getWeek("2019/"+mParam1);
+        Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week Like" + " \"%" + week + "%\"", null);
 
         float[] goal = new float[5];
         float[] measured = new float[5];
         float[] result = new float[5];
 
-        if (cursor1.getCount() == 0 || cursor2.getCount() == 0) {
-            showMessage("Error", "Nothing found");
+        if (cursor1.getCount() == 0) {
+            showMessage("경고", "모든 요일의 밸런스를 설정해주세요!");
         }
         while (cursor1.moveToNext()) {
             goal[0] = cursor1.getFloat(cursor1.getColumnIndex("sleep"));
@@ -193,15 +197,15 @@ public class ProgressbarFragment extends Fragment {
 
 
         textView8 = (TextView) view.findViewById(R.id.textView8);
-        textView8.setText("" + result[0]);
+        textView8.setText("" + Math.round(result[0]) + "%");
         textView9 = (TextView) view.findViewById(R.id.textView9);
-        textView9.setText("" + result[1]);
+        textView9.setText("" + Math.round(result[1]) + "%");
         textView10 = (TextView) view.findViewById(R.id.textView10);
-        textView10.setText("" + result[2]);
+        textView10.setText("" + Math.round(result[2]) + "%");
         textView11 = (TextView) view.findViewById(R.id.textView11);
-        textView11.setText("" + result[3]);
+        textView11.setText("" + Math.round(result[3]) + "%");
         textView12 = (TextView) view.findViewById(R.id.textView12);
-        textView12.setText("" + result[4]);
+        textView12.setText("" + Math.round(result[4]) + "%");
 
         progress1.setProgress(result[0]);
         progress2.setProgress(result[1]);
@@ -213,13 +217,13 @@ public class ProgressbarFragment extends Fragment {
     }
 
     private void setRecommend(int recommend) {
-
-
         imageView = (ImageView)view.findViewById(R.id.imageView);
+        TextView textView2 = (TextView)view.findViewById(R.id.recommend);
 
         switch (recommend){
             case 0:
                 //수면 부족
+                textView2.setText("수면이 부족한");
                 imageView.setImageResource(R.drawable.sleep_l);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -232,6 +236,7 @@ public class ProgressbarFragment extends Fragment {
 
             case 1:
                 //일 부족
+                textView2.setText("업무가 부족한");
                 imageView.setImageResource(R.drawable.work_l);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -244,6 +249,7 @@ public class ProgressbarFragment extends Fragment {
                 break;
             case 2:
                 //공부 부족
+                textView2.setText("공부가 부족한");
                 imageView.setImageResource(R.drawable.study_l);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -256,6 +262,7 @@ public class ProgressbarFragment extends Fragment {
                 break;
             case 3:
                 //운동 부족
+                textView2.setText("운동이 부족한");
                 imageView.setImageResource(R.drawable.exercise_l);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -268,6 +275,7 @@ public class ProgressbarFragment extends Fragment {
                 break;
             case 4:
                 //여가 부족
+                textView2.setText("여가가 부족한");
                 imageView.setImageResource(R.drawable.leisure_l);
 
 
@@ -282,6 +290,7 @@ public class ProgressbarFragment extends Fragment {
 
             case 5:
                 //잠 많음
+                textView2.setText("수면이 많은");
                 imageView.setImageResource(R.drawable.sleep_m);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -294,6 +303,7 @@ public class ProgressbarFragment extends Fragment {
                 break;
             case 6:
                 //업무 많음
+                textView2.setText("업무가 많은");
                 imageView.setImageResource(R.drawable.work_m);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -305,6 +315,7 @@ public class ProgressbarFragment extends Fragment {
                 break;
             case 7:
                 //공부 많음
+                textView2.setText("공부가 많은");
                 imageView.setImageResource(R.drawable.study_m);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -316,6 +327,7 @@ public class ProgressbarFragment extends Fragment {
                 break;
             case 8:
                 //운동 많음
+                textView2.setText("운동이 많은");
                 imageView.setImageResource(R.drawable.exercise_m);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -328,6 +340,7 @@ public class ProgressbarFragment extends Fragment {
 
             case 9:
                 //여가 많음
+                textView2.setText("여가가 많은");
                 imageView.setImageResource(R.drawable.leisure_m);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
