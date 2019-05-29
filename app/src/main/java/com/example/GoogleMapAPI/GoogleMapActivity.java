@@ -85,7 +85,7 @@ public class GoogleMapActivity extends AppCompatActivity
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
-    private static final int UPDATE_INTERVAL_MS = 10000;  // 1초=1000  5분으로 고침
+    private static final int UPDATE_INTERVAL_MS = 10000;  // 1초=1000  5분으로 고침 = 300000
     private static final int FASTEST_UPDATE_INTERVAL_MS = 10000; // 0.5초=500 //5분=300초=300000 //5분보다 빨리 검색하지 않는다.
     //설명
     //.setInterval(15000) // 15 seconds
@@ -101,8 +101,10 @@ public class GoogleMapActivity extends AppCompatActivity
     boolean mMoveMapByAPI = true;
     LatLng currentPosition;
 
-
     LatLng previousPosition = null;   //추가
+
+    long now = System.currentTimeMillis();
+    Date date = new Date(now);
 
     LocationRequest locationRequest = new LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -143,13 +145,13 @@ public class GoogleMapActivity extends AppCompatActivity
         previous_marker = new ArrayList<Marker>();
 
 
-        Button button = (Button) findViewById(R.id.button);
+        /*Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPlaceInformation(currentPosition);
             }
-        });
+        });*/
 
         Log.d(TAG, "onCreate");
         mActivity = this;
@@ -280,7 +282,11 @@ public class GoogleMapActivity extends AppCompatActivity
         setCurrentLocation(location, markerTitle, markerSnippet);   //마커 생성
         //mCurrentLocatiion = location;
 
-        if (previousPosition != null) {  //previousPosition이 null이 아니면 실행(이전 위치가 존재, 최초 실행때만 제외하고 계속 실행되야 함)
+        if(previousPosition == null){  //최초 실행했을 때 (앱을 아예 처음 켰을 때??)  //이 때 가까운 place들이 뜸
+            showPlaceInformation(currentPosition);     //자동으로 place 검색
+            previousPosition = currentPosition;
+        }
+        else  {  //previousPosition이 null이 아니면 실행(이전 위치가 존재, 최초 실행이 아닐 때) (previousPosition != null)
             /*curlat = Math.round(currentPosition.latitude*100000)/100000.0;    //소수 5째자리 까지(오차를 줄이기 위해)
             curlong = Math.round(currentPosition.longitude*100000)/100000.0;  //소수 5째자리 까지(오차를 줄이기 위해)
             prelat = Math.round(previousPosition.latitude*100000)/100000.0;  //소수 5째자리 까지(오차를 줄이기 위해)
@@ -290,15 +296,19 @@ public class GoogleMapActivity extends AppCompatActivity
             //distanceMeter = distance(curlat, curlong, prelat, prelong);
             System.out.println("이전 위치가 존재하는 상태입니다.: " + previousPosition.latitude + " " + previousPosition.longitude + " distance: " + distance); //최초 실행때는 실행되면 안됨, 이전 위치 존재x
 
-            if (distance >= 50) {      //추가추가
-                System.out.println("타임라인에 입력된 장소로부터 50m를 벗어남");
-                Toast toast = Toast.makeText(this, "50m를 벗어남!", Toast.LENGTH_SHORT);  //50m를 벗어났다는 알림이 핸드폰에 뜸
+            if (distance >= 2) {      //추가추가    //원래 50
+                System.out.println("타임라인에 입력된 장소로부터 2m를 벗어남");
+                Toast toast = Toast.makeText(this, "2m를 벗어남!", Toast.LENGTH_SHORT);  //50m를 벗어났다는 알림이 핸드폰에 뜸
                 toast.show();
                 /*
                  *
-                 * 이 때 팝업이 떠야 합니다.
+                 * 이 때 팝업이 떠야 함
                  *
+                 * 이 때 제일 가까운 장소가 타임라인에 넘어가야 함
                  * */
+                showPlaceInformation(currentPosition);     //자동으로 place 검색
+                setDBTimeLine();    //자동으로 db에 넣어주고 가장 가까운 장소를 타임라인으로 넘김
+
                 previousPosition = currentPosition; //거리 범위를 넘었으니깐 현재 포지션은 다음 setCurrentLocation가 실행될 때 이전 포지션이 된다.
             } else {
                 System.out.println("비슷한 위치");
@@ -592,22 +602,41 @@ public class GoogleMapActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPlacesFailure(PlacesException e) {
+    public void onPlacesFailure(PlacesException e) {   //
+        // 장소 불러오는게 실패했을 때
+        System.out.println("placeFailure");
+        //showPlaceInformation(currentPosition);     //자동으로 place 다시 검색
+
     }
 
     @Override
     public void onPlacesStart() {
+        System.out.println("placestart");
     }
+
+    ArrayList<MarkerInfo> mlist = new ArrayList<>();
+    ArrayList<MarkerInfo> sort_mlist = new ArrayList<>();
+    double placeDistance = 0;
+    String[] placeType = null;
+    String placeName = null;
+
 
     @Override
     public void onPlacesSuccess(final List<Place> places) {  ////!!!!!!!
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                System.out.println("placesuccess");
+                 /* try {
+                    Thread.sleep(2000);  //2초
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
                 ArrayList<MarkerInfo> mlist = new ArrayList<>();
-                double placeDistance = 0;
-                String[] placeType = null;
-                String placeName = null;
+                //double placeDistance = 0;
+                //String[] placeType = null;
+                //String placeName = null;
+
                 //String placeAddr = null;
 
                 for (noman.googleplaces.Place place : places) {  //검색된 장소들에 대해 실행
@@ -648,8 +677,6 @@ public class GoogleMapActivity extends AppCompatActivity
                 Collections.sort(mlist, comp);
                 //mlist에 저장된 객체들을 거리순으로 정렬
 
-
-
                 final ListView listView = (ListView) findViewById(R.id.listView);
                 ArrayList<HashMap<String, String>> MarkerList = new ArrayList<>();
                 SimpleAdapter simpleAdapter = new SimpleAdapter(GoogleMapActivity.this, MarkerList, android.R.layout.simple_list_item_2, new String[]{"place_name", "place_type"}, new int[]{android.R.id.text1, android.R.id.text2});
@@ -659,10 +686,11 @@ public class GoogleMapActivity extends AppCompatActivity
                     tmplist.put("place_name", m.getPlaceName());
                     tmplist.put("place_type", m.getPlaceType());
                     System.out.println("거리 확인: " + m.getDistance());
-                    if (m.getDistance() > 31) {
+                    if (m.getDistance() > 31) {   //시청과 범위 벗어나는 장소를 리스트에 띄우지 않기 위해서
                         continue;
                     }
                     MarkerList.add(tmplist);  //리스트뷰에 띄울 리스트 생성
+                    sort_mlist.add(m);
                 }
                 listView.setAdapter(simpleAdapter);
 
@@ -728,6 +756,63 @@ public class GoogleMapActivity extends AppCompatActivity
         });
     }
 
+    public void setDBTimeLine(){   //이 때 db에 장소 이름과 타입이 타임라인에 저장된다.
+        System.out.println("setDBTimeLine시작");
+        MarkerInfo tmp = sort_mlist.get(0);
+        System.out.println(tmp.getPlaceName());
+        String title = tmp.getPlaceName();
+        String type = tmp.getPlaceType();
+        System.out.println("제일 가까운 장소 이름: " + title + "\n제일 가까운 장소 타입: " + type);
+
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        // 시간을 나타냇 포맷을 정한다 ( yyyy/MM/dd 같은 형태로 변형 가능 )
+        SimpleDateFormat sdfdate = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdftime = new SimpleDateFormat("HH:mm:ss");
+        final String formatDate = sdfdate.format(date);
+        final String formatTime = sdftime.format(date);
+
+        //db 삽입 부분
+        DBHelper helper = new DBHelper(getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from tb_timeline where endtime is NULL", null);
+
+        //아예 처음시작하는 활동인 경우
+        if (cursor.getCount() == 0 ) {
+            db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                    new String[]{formatDate, title, type, formatTime});
+            return;
+        }
+        //전의 활동이 있는경우
+        else {
+            cursor.moveToFirst();
+            String place = cursor.getString(cursor.getColumnIndex("place"));
+            String category = cursor.getString(cursor.getColumnIndex("category"));
+            String starttime = cursor.getString(cursor.getColumnIndex("starttime"));
+
+            try {
+                //활동 중 날짜가 넘어가는 경우 ///단 한 활동이 24시간을 넘지 않는다는 가정하에
+                if (sdftime.parse(starttime).getTime() > sdftime.parse(formatTime).getTime()) {
+                    db.execSQL("update tb_timeline set endtime=? where endtime is NULL",
+                            new String[]{"24:00:00"});
+                    db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                            new String[]{formatDate, place, category, "00:00:00"});
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //클릭 동시에 시작시간을 전에 활동 시작시간으로 update
+            db.execSQL("update tb_timeline set endtime=? where endtime is NULL",
+                    new String[]{formatTime});
+            //현재 장소, 카테고리, 현재시간 insert
+            db.execSQL("insert into tb_timeline (date, place, category, starttime) values (?,?,?,?)",
+                    new String[]{formatDate, title, type, formatTime});
+        }
+
+        db.close();
+    }
+
     public void showMessage(String title, String Message) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -738,6 +823,7 @@ public class GoogleMapActivity extends AppCompatActivity
 
     @Override
     public void onPlacesFinished() {
+        //System.out.println("onPlacesFinished");
     }
 
     public void showPlaceInformation(LatLng location) {   //////////!!!!!!!
