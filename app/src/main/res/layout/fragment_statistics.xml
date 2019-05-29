@@ -5,7 +5,7 @@
     android:gravity="center"
     xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto">
 
-    <info.hoang8f.android.segmented.SegmentedGroup
+    <!--info.hoang8f.android.segmented.SegmentedGroup
         android:id="@+id/segmented2"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -32,14 +32,13 @@
             android:layout_weight="1"
             android:text="월별"
             style="@style/RadioButton" />
-    </info.hoang8f.android.segmented.SegmentedGroup>
+    </info.hoang8f.android.segmented.SegmentedGroup-->
 
     <RelativeLayout
         android:id="@+id/chart_and_avg_viewpager_layout"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
         android:layout_below="@+id/segmented2">
 
         <TextView

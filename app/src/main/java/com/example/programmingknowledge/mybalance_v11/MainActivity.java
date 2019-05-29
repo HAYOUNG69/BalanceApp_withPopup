@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new HomeFragment();
                             break;
                         case R.id.nav_statistics:
-                            selectedFragment = new StatisticsFragment();
+                            selectedFragment = new LeftFragment();
                             break;
                         case R.id.nav_settings:
                             selectedFragment = new SettingsFragment();

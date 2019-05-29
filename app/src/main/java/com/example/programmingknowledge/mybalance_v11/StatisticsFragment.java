@@ -25,45 +25,67 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class StatisticsFragment extends Fragment {
-        private static final int DEFAULT_DATA = 0;
+    // newInstance 할 때 파라미터로 받아오는 걸 저장
+    private static final String ARG_PARAM1 = "param1";
+    private String mParam1;
 
-        private ColumnChartView chart;
-        private ColumnChartData data;
-        private boolean hasAxes = true;
-        private boolean hasAxesNames = true;
-        private boolean hasLabels = true;
-        private boolean hasLabelForSelected = true;
-        private int dataType = DEFAULT_DATA;
+    private static final int DEFAULT_DATA = 0;
 
-        int MAX_PAGE=3;
-        Fragment cur_fragment=new Fragment();
+    private ColumnChartView chart;
+    private ColumnChartData data;
+    private boolean hasAxes = true;
+    private boolean hasAxesNames = true;
+    private boolean hasLabels = true;
+    private boolean hasLabelForSelected = true;
+    private int dataType = DEFAULT_DATA;
 
-        public StatisticsFragment() {
+    int MAX_PAGE=3;
+    Fragment cur_fragment=new Fragment();
+
+    public StatisticsFragment() {
+    }
+
+    // view pager에서 StatisticsFragment 생성할때 씀, 파라미터를 저장해줌
+    public static StatisticsFragment newInstance(String param1) {
+        StatisticsFragment fragment = new StatisticsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    // view pager에서 StatisticsFragment 생성할때 씀, 파라미터를 저장해줌
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
         }
+    }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            setHasOptionsMenu(true);
-            View rootView = inflater.inflate(R.layout.fragment_statistics, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        View rootView = inflater.inflate(R.layout.fragment_statistics, container, false);
 
-            chart = (ColumnChartView) rootView.findViewById(R.id.chart);
-            //fragment_statistics.setOnValueTouchListener(new ValueTouchListener());   //차트를 선택했을때 값이 팝업으로 뜨는 함수
-            chart.setZoomEnabled(false);
+        chart = (ColumnChartView) rootView.findViewById(R.id.chart);
+        //fragment_statistics.setOnValueTouchListener(new ValueTouchListener());   //차트를 선택했을때 값이 팝업으로 뜨는 함수
+        chart.setZoomEnabled(false);
 
-            //db읽기
-            DBHelper helper = new DBHelper(container.getContext());
-            SQLiteDatabase db = helper.getWritableDatabase();
+        //db읽기
+        DBHelper helper = new DBHelper(container.getContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
 
-            setMonthAndNthWeek(rootView, db);   //'-월 -주차' 텍스트뷰 변경
-            generateStackedData(db); //차트 생성
-            setAverageTime(rootView, db); //이주의 평균시간들 텍스트뷰 변경
+        setMonthAndNthWeek(rootView, db);   //'-월 -주차' 텍스트뷰 변경
+        generateStackedData(db); //차트 생성
+        setAverageTime(rootView, db); //이주의 평균시간들 텍스트뷰 변경
 
-            return rootView;
-        }
+        return rootView;
+    }
 
     public void setMonthAndNthWeek(View rootView, SQLiteDatabase db){
             TextView nthweek = rootView.findViewById(R.id.nthweek);
-            Cursor cursor = db.rawQuery("select * from tb_dailybalance where date='2019-05-14' ", null);
+            Cursor cursor = db.rawQuery("select * from tb_dailybalance where date='2019/05/14' ", null);
             cursor.moveToNext();
             String month = (cursor.getString(cursor.getColumnIndex("date"))).substring(5, 7);
             int nth = getNthWeek(cursor.getString(cursor.getColumnIndex("date")));
