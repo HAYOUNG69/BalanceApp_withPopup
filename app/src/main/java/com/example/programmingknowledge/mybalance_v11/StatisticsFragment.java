@@ -5,17 +5,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import lecho.lib.hellocharts.model.Axis;
@@ -26,10 +25,6 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class StatisticsFragment extends Fragment {
-    /*public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_column_chart,container,false);
-    }
-*/
         private static final int DEFAULT_DATA = 0;
 
         private ColumnChartView chart;
@@ -55,91 +50,89 @@ public class StatisticsFragment extends Fragment {
             //fragment_statistics.setOnValueTouchListener(new ValueTouchListener());   //차트를 선택했을때 값이 팝업으로 뜨는 함수
             chart.setZoomEnabled(false);
 
-            /*ViewPager pager=(ViewPager)rootView.findViewById(R.id.chart_viewpager);
-            //캐싱을 해놓을 프래그먼트 개수
-            pager.setOffscreenPageLimit(3);
-            //getSupportFragmentManager로 프래그먼트 참조가능
-            //ChartPagerAdapter adapter = new ChartPagerAdaptergetSupportFragmentManager());
-            ChartPagerAdapter adapter = new ChartPagerAdapter(null);
-            adapter.addItem(inflater.inflate(R.layout.fragment_chart));
-            adapter.addItem(fragment2);
-            adapter.addItem(fragment3);
-            pager.setAdapter(adapter);*/
-
             //db읽기
             DBHelper helper = new DBHelper(container.getContext());
             SQLiteDatabase db = helper.getWritableDatabase();
 
-            generateStackedData(db);
-            setAverageTime(db);
+            setMonthAndNthWeek(rootView, db);   //'-월 -주차' 텍스트뷰 변경
+            generateStackedData(db); //차트 생성
+            setAverageTime(rootView, db); //이주의 평균시간들 텍스트뷰 변경
 
             return rootView;
         }
 
-     /*
-    //어댑터 안에서 각각의 아이템을 데이터로서 관리한다
-    class ChartPagerAdapter extends PagerAdapter {
-        LayoutInflater inflater;
-
-        public ChartPagerAdapter(LayoutInflater inflater) {
-            // TODO Auto-generated constructor stub
-
-            //전달 받은 LayoutInflater를 멤버변수로 전달
-            this.inflater=inflater;
-        }
-
-        //PagerAdapter가 가지고 있는 View의 개수를 리턴
-        //보통 보여줘야하는 이미지 배열 데이터의 길이를 리턴
-        @Override
-        public int getCount() {
-            // TODO Auto-generated method stub
-            return 3; //일단 3이라고 적어둠
-        }
-
-        //ViewPager가 현재 보여질 Item(View객체)를 생성할 필요가 있는 때 자동으로 호출
-        //쉽게 말해, 스크롤을 통해 현재 보여져야 하는 View를 만들어냄.
-        //첫번째 파라미터 : ViewPager
-        //두번째 파라미터 : ViewPager가 보여줄 View의 위치(가장 처음부터 0,1,2,3...)
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            // TODO Auto-generated method stub
-
-            View chartview=null;
-
-            //새로운 View 객체를 Layoutinflater를 이용해서 생성
-            chartview= inflater.inflate(R.layout.fragment_chart, null);
-
-            //chartview 내부 객체들 값 세팅하는 부분..?
-
-            //ViewPager에 만들어 낸 View 추가
-            container.addView(chartview);
-
-            //Image가 세팅된 View를 리턴
-            return chartview;
-        }
-
-        //화면에 보이지 않은 View는 파괴를 해서 메모리를 관리함.
-        //첫번째 파라미터 : ViewPager
-        //두번째 파라미터 : 파괴될 View의 인덱스(가장 처음부터 0,1,2,3...)
-        //세번째 파라미터 : 파괴될 객체(더 이상 보이지 않은 View 객체)
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            // TODO Auto-generated method stub
-
-            //ViewPager에서 보이지 않는 View는 제거
-            //세번째 파라미터가 View 객체 이지만 데이터 타입이 Object여서 형변환 실시
-            container.removeView((View)object);
-
-        }
-
-        //instantiateItem() 메소드에서 리턴된 Ojbect가 View가  맞는지 확인하는 메소드
-        @Override
-        public boolean isViewFromObject(View v, Object obj) {
-            // TODO Auto-generated method stub
-            return v==obj;
-        }
+    public void setMonthAndNthWeek(View rootView, SQLiteDatabase db){
+            TextView nthweek = rootView.findViewById(R.id.nthweek);
+            Cursor cursor = db.rawQuery("select * from tb_dailybalance where date='2019-05-14' ", null);
+            cursor.moveToNext();
+            String month = (cursor.getString(cursor.getColumnIndex("date"))).substring(5, 7);
+            int nth = getNthWeek(cursor.getString(cursor.getColumnIndex("date")));
+            nthweek.setText(month+"월 "+nth+"주차");
     }
-    */
+
+    private static int getNthWeek(String thisDate) {
+        // 시간을 나타냇 포맷을 정한다 ( yyyy/MM/dd 같은 형태로 변형 가능 )
+        //SimpleDateFormat sdfdate = new SimpleDateFormat("yyyy/MM/dd");
+        //String thisDate = sdfdate.format(date);
+        //String thisDate = "2019/07/07";
+        System.out.println(thisDate);
+
+        String todayYY = thisDate.substring(0, 4); //0123
+        String todayMM = thisDate.substring(5, 7); //56
+        String todayDD = thisDate.substring(8, 10);  //89
+
+        // 오늘 일자를 받아서 int 형으로 치환 한다.
+        int year = Integer.parseInt(todayYY);
+        int month = Integer.parseInt(todayMM)-1;   // 월은 0 부터 시작이기 때문에 -1 을 해준다.
+        int day = Integer.parseInt(todayDD);
+        int monday = 0;
+        int friday = 0;
+
+        // calendar 선언.
+        Calendar to_day = Calendar.getInstance();
+        //오늘 일자를 setup 한다.
+        to_day.set(year, month, day);
+        // 오늘을 기준으로 해당 주의 월요일 과 금요일을 구한다.
+        int today_week =  to_day.get(Calendar.DAY_OF_WEEK); // 오늘이 무슨 요일인지 int형으로 반환. /(1-7)/1은 SUNDAY 7은 SATURDAY
+
+        if(today_week == Calendar.MONDAY){ // 먼저 월요일을 구하기 위해 오늘이 월요일인지 체크 한다.
+            monday = day;
+            friday = day + (Calendar.FRIDAY - Calendar.MONDAY);
+            // 오늘이 월요일이면 오늘 일자에  금요일과 월요일의 일차수를 뺀 만큼 더하면 금요일 일자가 나온다.
+        }
+        else if(today_week == Calendar.FRIDAY) { // 오늘 일자가 금요일인지 체크 한다.
+            // 오늘이 금요일이면 오늘 일자에  금요일과 월요일의 일차수를 뺀 만큼 빼면 월요일 일자가 나온다.
+            monday = day - (Calendar.FRIDAY - Calendar.MONDAY);
+            friday = day;
+        }
+        else if(today_week == Calendar.SUNDAY){
+            // today_week 가 일요일 이면 오늘 일자에 sunday(1)를 더하여 monday 일자를 구함.
+            monday = day + Calendar.SUNDAY;
+            friday = day + (Calendar.FRIDAY - Calendar.SUNDAY);
+            // 오늘이 일요일이면 friday(6) 에 sunday(1)을 뺀 만큼 더하여 금요일 일자를 구함.
+        }
+        else if(today_week == Calendar.SATURDAY){
+            // 오늘이 토요일이면 saturday(7) 에서 monday(2)를 뺀 후 오늘일자에서 뺀 뒤 월요일 일자를 구함.
+            monday = day - (Calendar.SATURDAY - Calendar.MONDAY);
+            // 오늘이 토요일이면 saturday(7) 에서 friday(6)을 뺀 후 오늘일자에서 뺀 뒤 금요일 일자를 구함.
+            friday = day - (Calendar.SATURDAY - Calendar.FRIDAY);
+        }
+        else {  // 화 , 수 , 목 일 때
+            // 오늘 일자 표시 에서 monday(2) 를 뺀 후 오늘 일자에서 해당 일자를 뺀다.
+            monday = day - (today_week - Calendar.MONDAY);
+            // friday(6) 에서 오늘 일자 표시를 뺀 후 오늘일자에 해당 일자를 더한다.
+            friday = day + (Calendar.FRIDAY - today_week);
+        }
+        //이번주의 주차를 구한다.
+        //주차는 월요일을 기준으로 해당 달의 주차를 표시 한다.
+        to_day = Calendar.getInstance(); // to_day 를 초기화 한다.
+        to_day.set(year, month, friday); // 월요일에 해당하는 주차 구하기 위해 월요일 일자를 입력. //월요일 넣으나 금요일 넣으나 똑같은거 같음
+
+        int this_week =  to_day.get(Calendar.WEEK_OF_MONTH); // 이번 주의 월요일에 해당하는 주차를 가져온다.
+        System.out.println(this_week);
+        return this_week;
+        //this_week가 우리가 필요한 값
+    }
     
     private void generateStackedData(SQLiteDatabase db) {
         int categoryNum = 5;   //스택의 개수
@@ -196,9 +189,28 @@ public class StatisticsFragment extends Fragment {
         chart.setColumnChartData(data);
     }
 
-    private void setAverageTime(SQLiteDatabase db){
-        //int a = Calendar.;
-        Cursor cursor = db.rawQuery("select * from tb_dailybalance where date='2019-05-14' ", null);
-
+    private void setAverageTime(View rootView, SQLiteDatabase db){
+        TextView sleepAverageValue = rootView.findViewById(R.id.sleepAverageValue);
+        TextView workAverageValue = rootView.findViewById(R.id.workAverageValue);
+        TextView studyAverageValue = rootView.findViewById(R.id.studyAverageValue);
+        TextView exerciseAverageValue = rootView.findViewById(R.id.exerciseAverageValue);
+        TextView leisureAverageValue = rootView.findViewById(R.id.leisureAverageValue);
+        TextView othersAverageValue = rootView.findViewById(R.id.othersAverageValue);
+        Cursor cursor = db.rawQuery("select * from tb_dailybalance where date between '2019-05-13' and '2019-05-19'", null);
+        float sleep=0,work=0,study=0,exercise=0,leisure=0,others=0;
+        while(cursor.moveToNext()){
+            sleep += cursor.getFloat(cursor.getColumnIndex("sleep"));
+            work += cursor.getFloat(cursor.getColumnIndex("work"));
+            study += cursor.getFloat(cursor.getColumnIndex("study"));
+            exercise += cursor.getFloat(cursor.getColumnIndex("exercise"));
+            leisure += cursor.getFloat(cursor.getColumnIndex("leisure"));
+            others += cursor.getFloat(cursor.getColumnIndex("other"));
+        }
+        sleepAverageValue.setText(String.valueOf(sleep));
+        workAverageValue.setText(String.valueOf(work));
+        studyAverageValue.setText(String.valueOf(study));
+        exerciseAverageValue.setText(String.valueOf(exercise));
+        leisureAverageValue.setText(String.valueOf(leisure));
+        othersAverageValue.setText(String.valueOf(others));
     }
 }
