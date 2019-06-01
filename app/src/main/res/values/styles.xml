@@ -23,4 +23,8 @@
         <item name="android:paddingRight">5dp</item>
     </style>
 
+    <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/startscreen</item>
+    </style>
+
 </resources>

@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +86,10 @@ public class TimelineFragment extends Fragment {
         myListView.setAdapter(myAdapter);
 
         //길게 눌렀을때 수정/삭제
+        String[] s = { "수면", "일", "공부", "운동", "여가", "기타"};
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, s);
+        adp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final AlertDialog.Builder alBuilder = new AlertDialog.Builder(container.getContext());
         AdapterView.OnItemLongClickListener adapterListener = new AdapterView.OnItemLongClickListener() {
             @Override
@@ -92,12 +97,18 @@ public class TimelineFragment extends Fragment {
                 final TimelineRow row = timelineRowsList.get(position);
                 final SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm:ss");
                 final EditText place = new EditText(getActivity());
-                final EditText category = new EditText(getActivity());
                 final TextView sPlace = new TextView(getActivity());
                 final TextView sCategory = new TextView(getActivity());
+                final Spinner category = new Spinner(getActivity());
 
+                LinearLayout.LayoutParams params2 = new  LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params2.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                params2.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                category.setLayoutParams(params2);
+                category.setAdapter(adp);
                 place.setSingleLine(true);
-                category.setSingleLine(true);
+                place.setText(row.getDescription());
+                place.setHint("수정할 장소를 입력해주세요");
                 sPlace.setText("장소");
                 sCategory.setText("카테고리");
 
@@ -107,19 +118,14 @@ public class TimelineFragment extends Fragment {
                 params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
 
                 place.setLayoutParams(params);
-                category.setLayoutParams(params);
-                sPlace.setLayoutParams(params);
                 sCategory.setLayoutParams(params);
+                sPlace.setLayoutParams(params);
                 container.setOrientation(LinearLayout.VERTICAL);
                 container.addView(sPlace);
                 container.addView(place);
                 container.addView(sCategory);
                 container.addView(category);
 
-
-                alBuilder.setMessage("장소/카테고리 수정");
-                alBuilder.setTitle("타임라인 수정/삭제");
-                alBuilder.setView(container);
 
                 // "취소" 버튼을 누르면 실행되는 리스너
                 alBuilder.setNeutralButton("취소", new DialogInterface.OnClickListener() {
@@ -148,8 +154,28 @@ public class TimelineFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String sPlace = place.getText().toString();
-                        String sCategory = category.getText().toString();
                         String starttime = transFormat.format(row.getDate());
+                        String sCategory = category.getSelectedItem().toString();
+                        switch (sCategory) {
+                            case "수면":
+                                sCategory = "sleep";
+                                break;
+                            case "일":
+                                sCategory = "work";
+                                break;
+                            case "공부":
+                                sCategory = "study";
+                                break;
+                            case "운동":
+                                sCategory = "exercise";
+                                break;
+                            case "여가":
+                                sCategory = "leisure";
+                                break;
+                            default:
+                                sCategory = "other";
+                        }
+
                         DBHelper helper = new DBHelper(getContext());
                         SQLiteDatabase db = helper.getWritableDatabase();
                         db.execSQL("UPDATE tb_timeline SET place=\"" + sPlace + "\", category="
@@ -160,13 +186,15 @@ public class TimelineFragment extends Fragment {
                     }
                 });
 
+                alBuilder.setMessage("장소/카테고리 수정");
+                alBuilder.setTitle("타임라인 수정/삭제");
+                alBuilder.setView(container);
                 alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
 
                 return false;
             }
         };
         myListView.setOnItemLongClickListener(adapterListener);
-
 
         return view;
     }

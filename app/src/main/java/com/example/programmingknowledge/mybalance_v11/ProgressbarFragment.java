@@ -128,7 +128,7 @@ public class ProgressbarFragment extends Fragment {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         Cursor cursor2 = db.rawQuery("select * from tb_dailybalance where date=? ", new String[]{mParam1});
-        String week = getWeek("2019/"+mParam1);
+        String week = getWeek(mParam1);
         Cursor cursor1 = db.rawQuery("select * from tb_goalbalance where week Like" + " \"%" + week + "%\"", null);
 
         float[] goal = new float[5];
@@ -170,9 +170,9 @@ public class ProgressbarFragment extends Fragment {
         result[4] = measured[4] / goal[4] * 100;
 
         //추천활동 정하기
-        float min = 0;
+        float min = 100;
         float max = 100;
-        int recommend_min = 0;
+        int recommend_min = 100;
         int recommend_max=0;
         //recommend는 0~4 를 통해 카테고리 알려줌
 
