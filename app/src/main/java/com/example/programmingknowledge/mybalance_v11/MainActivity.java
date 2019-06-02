@@ -44,15 +44,27 @@ public class MainActivity extends AppCompatActivity {
      */
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
+    //MyAlarm mReceiver = null;
 
     private boolean mAlreadyStartedService = false;
     private TextView mMsgView;
+
+
+    private BroadcastReceiver MyAlarm = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // intent ..
+            intent = new Intent(context, GoogleMapActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mMsgView = (TextView) findViewById(R.id.msgView);
 
-       // mTextMessage = (TextView) findViewById(R.id.message);
+        // mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -60,27 +72,68 @@ public class MainActivity extends AppCompatActivity {
 
         navigation.setSelectedItemId(R.id.nav_home);
 
-        mMsgView = (TextView) findViewById(R.id.msgView);
-        Intent intent = new Intent(this, MyAlarm.class);
 
-        PendingIntent pi = PendingIntent.getBroadcast(this.getApplicationContext(),1,intent,0);
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),5000,pi);
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        String latitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LATITUDE);
-                        String longitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LONGITUDE);
+//        Intent intent = new Intent(this, MyAlarm.class);
+//
+//        PendingIntent pi = PendingIntent.getBroadcast(this.getApplicationContext(),1,intent,0);
+//        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),5000*60,pi);
 
-                        if (latitude != null && longitude != null) {
-                            mMsgView.setText(getString(R.string.msg_location_service_started) + "\n Latitude : " + latitude + "\n Longitude: " + longitude);
-                        }
-                    }
-                }, new IntentFilter(LocationMonitoringService.ACTION_LOCATION_BROADCAST)
-        );
+        startMyService();
 
+
+
+        IntentFilter stateFilter = new IntentFilter();
+        stateFilter.addAction(LocationMonitoringService.ACTION_LOCATION_BROADCAST); //BluetoothAdapter.ACTION_STATE_CHANGED : 블루투스 상태변화 액션
+
+        registerReceiver(MyAlarm, stateFilter);
+
+
+//        mReceiver = new MyAlarm();
+//        IntentFilter intentfilter = new IntentFilter();
+//        intentfilter.addAction(LocationMonitoringService.ACTION_LOCATION_BROADCAST);
+
+        //브로드캐스트의 액션을 등록하기 위한 인텐트 필터
+
+        //동적 리시버 구현
+
+        //Receiver 등록
+//        registerReceiver(mReceiver, intentfilter);
+//        Log.d(TAG,"receiver 등록");
+
+
+
+//        LocalBroadcastManager.getInstance(this).registerReceiver(
+//                new BroadcastReceiver() {
+//                    @Override
+//                    public void onReceive(Context context, Intent intent) {
+//                        String latitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LATITUDE);
+//                        String longitude = intent.getStringExtra(LocationMonitoringService.EXTRA_LONGITUDE);
+//
+//
+//                        Log.d(TAG,"여기가 메인의 리시버");
+//
+//                        if (latitude != null && longitude != null) {
+//                            mMsgView.setText(getString(R.string.msg_location_service_started) + "\n Latitude : " + latitude + "\n Longitude: " + longitude);
+//                        }
+//
+//                    }
+//                }, new IntentFilter(LocationMonitoringService.ACTION_LOCATION_BROADCAST)
+//        );
+
+}
+
+
+    private void startMyService() {
+        try {
+
+            Intent myServiceIntent = new Intent(this, LocationMonitoringService.class);
+            startService(myServiceIntent);
+            Log.d(TAG,"START SERVICE");
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+    }
 
     @Override
     public void onResume() {
@@ -339,6 +392,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         super.onDestroy();
+        unregisterReceiver(MyAlarm);
+
     }
 
 
@@ -348,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
 
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.nav_home:
                             selectedFragment = new HomeFragment();
                             break;

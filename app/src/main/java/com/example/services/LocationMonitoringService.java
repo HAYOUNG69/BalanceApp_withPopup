@@ -41,6 +41,8 @@ public class LocationMonitoringService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Log.d(TAG,"여기 onStartCommand");
         mLocationClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -50,7 +52,7 @@ public class LocationMonitoringService extends Service implements
 
         mLocationRequest.setInterval(Constants.LOCATION_INTERVAL);
         mLocationRequest.setFastestInterval(Constants.FASTEST_LOCATION_INTERVAL);
-        mLocationRequest.setSmallestDisplacement(30f);
+        mLocationRequest.setSmallestDisplacement(50f);
 
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
@@ -65,6 +67,7 @@ public class LocationMonitoringService extends Service implements
         //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
         return START_STICKY;
     }
+
 
     @Nullable
     @Override
@@ -103,6 +106,7 @@ public class LocationMonitoringService extends Service implements
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "Connection suspended");
+//        LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,mLocationRequest,this);
     }
 
 
@@ -115,9 +119,6 @@ public class LocationMonitoringService extends Service implements
 //        Intent intent = new Intent(this, ShowMsgActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        this.startActivity(intent);
-
-
-
 
 
 
@@ -134,10 +135,10 @@ public class LocationMonitoringService extends Service implements
 
         Log.d(TAG, "Sending info...");
 
-        Intent intent = new Intent(ACTION_LOCATION_BROADCAST);
-        intent.putExtra(EXTRA_LATITUDE, lat);
-        intent.putExtra(EXTRA_LONGITUDE, lng);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Intent sendintent = new Intent(ACTION_LOCATION_BROADCAST);
+        sendintent.putExtra(EXTRA_LATITUDE, "latitude래");
+        sendintent.putExtra(EXTRA_LONGITUDE, "longitude어쩌구");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(sendintent);
 
     }
 
@@ -147,6 +148,7 @@ public class LocationMonitoringService extends Service implements
         Log.d(TAG, "Failed to connect to Google API");
 
     }
+
 
 
 }

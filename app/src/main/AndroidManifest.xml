@@ -19,15 +19,16 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
 
-        <receiver
-            android:name="com.example.MyAlarm"
-            android:enabled="true"
-            android:exported="false"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.LOCALE_CHANGED" />
-            </intent-filter>
-        </receiver>
+
+        <!--<receiver-->
+            <!--android:name="com.example.MyAlarm"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="false"-->
+            <!--&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="LocationMonitoringService LocationBroadcast" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <service android:name="com.example.services.LocationMonitoringService" />
         <activity
             android:name= ".SplashActivity"
@@ -43,7 +44,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyALr88wG8gkDB_iGiy6YhugN87euZgGIQA" />
+            android:value="AIzaSyCzIbfWIeAUYr9Uox5iyo_sKUwaSFD7fXY" />
 
         <activity
             android:name=".MainActivity"
